@@ -16,13 +16,29 @@ data class User(@Id val email: String,
                         joinColumns = [JoinColumn(name = "user_email", referencedColumnName = "email")],
                         inverseJoinColumns = [JoinColumn(name = "team_name", referencedColumnName = "name")])
                 val teams: Set<Team>,
-                @ManyToMany
-                @JoinTable(name = "users_roles",
-                        joinColumns = [JoinColumn(name = "user_email", referencedColumnName = "email")],
-                        inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")])
-                val roles: MutableSet<Role>) {
+                @ManyToOne
+                val role: Role) {
     fun toDTO(): UserDTO {
-        return UserDTO(email, null, name, roles.map(Role::name))
+        return UserDTO(email, null, name, role.name)
+    }
+
+    override fun toString(): String {
+        return "User(email='$email', name='$name', phash='$phash', lastLogin=$lastLogin, role=$role)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as User
+
+        if (email != other.email) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return email.hashCode()
     }
 
 

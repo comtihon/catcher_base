@@ -6,6 +6,4 @@ import javax.persistence.*
 @Table(name = "privileges")
 data class Privilege(@Id @GeneratedValue(strategy = GenerationType.AUTO)
                      val id: Int,
-                     val name: String,
-                     @ManyToMany(mappedBy = "privileges")
-                     val roles: MutableSet<Role>)
+                     val name: String)

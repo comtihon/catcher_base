@@ -17,6 +17,9 @@ import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import javax.annotation.PostConstruct
+import org.springframework.security.core.context.SecurityContextHolder
+
+
 
 
 // TODO Async
@@ -40,7 +43,6 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
     }
 
     override fun newProject(projectDto: ProjectDTO): ProjectDTO {
-        // TODO check return type (maybe Optional<Project>)
         var existing = projectRepo.findProjectByName(projectDto.name)
         val isNew =
                 if (existing == null) { // new project - create directories
@@ -54,10 +56,9 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
                     }
                     false
                 }
-        // TODO do I need to save it?
-        //val saved = projectRepo.save(existing)
-        scanner.scanProject(existing, isNew) // index project & all it's tests.
-        return existing.toDTO()
+        val saved = projectRepo.save(existing)
+        scanner.scanProject(saved, isNew) // index project & all it's tests.
+        return saved.toDTO()
     }
 
     override fun getAll(): List<ProjectDTO> {

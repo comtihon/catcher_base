@@ -11,22 +11,23 @@ CREATE TABLE teams
   name varchar(255) PRIMARY KEY
 );
 
+CREATE TABLE roles
+(
+  id   SERIAL PRIMARY KEY,
+  name varchar(255) unique
+);
+
 CREATE TABLE users
 (
   email      varchar(255) PRIMARY KEY,
   name       varchar(255) not null,
   phash      varchar(60)  not null,
   last_login TIMESTAMP,
-  type       varchar(255)
+  type       varchar(255),
+  role_id    integer not null references roles(id)
 );
 
 CREATE TABLE privileges
-(
-  id   SERIAL PRIMARY KEY,
-  name varchar(255) unique
-);
-
-CREATE TABLE roles
 (
   id   SERIAL PRIMARY KEY,
   name varchar(255) unique
@@ -37,13 +38,6 @@ CREATE TABLE roles_privileges
   role_id      integer REFERENCES roles (id),
   privilege_id integer REFERENCES privileges (id),
   CONSTRAINT pk_roles_privileges PRIMARY KEY (role_id, privilege_id)
-);
-
-CREATE TABLE users_roles
-(
-  user_email varchar(255) REFERENCES users (email),
-  role_id    integer REFERENCES roles (id),
-  CONSTRAINT pk_users_roles PRIMARY KEY (user_email, role_id)
 );
 
 CREATE TABLE users_teams

@@ -10,7 +10,7 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/v1/user")
 class UserController(@Autowired val userService: UserService) {
-    @PostMapping()
+    @PostMapping
     fun new(@Valid @RequestBody user: UserDTO): UserDTO {
         if (user.password.isNullOrEmpty())
             throw PasswordRequiredException("Password required")

@@ -11,7 +11,7 @@ import javax.transaction.Transactional
 
 @Repository
 interface UserRepository : CrudRepository<User, String> {
-    @Query("UPDATE User u SET u.lastLogin=:lastLogin WHERE u.email = ?#{ principal?.username }")
+    @Query("UPDATE User u SET u.lastLogin=:lastLogin WHERE u.email = ?#{ principal }")
     @Modifying
     @Transactional
     fun updateLastLogin(@Param("lastLogin") lastLogin: LocalDateTime)

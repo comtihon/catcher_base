@@ -7,9 +7,13 @@ import com.catcher.base.service.project.ProjectScanner.Companion.TEST_DIR
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.transaction.annotation.Transactional
 import java.nio.file.Path
 import java.nio.file.Paths
 
+@Transactional
+@DirtiesContext
 internal class ScanOnRuntimeTest : IntegrationTest() {
 
     @Autowired
@@ -21,6 +25,9 @@ internal class ScanOnRuntimeTest : IntegrationTest() {
     @Autowired
     lateinit var projectService: ProjectServiceImpl
 
+    /**
+     * New projects should be loaded on application startup
+     */
     @Test
     fun testProjectsLoadedOnStartup() {
         newProject("project1", "one.yml", "two.yml", "three.yaml")
@@ -51,6 +58,9 @@ internal class ScanOnRuntimeTest : IntegrationTest() {
         Assert.assertEquals("testB.JSON", tests2[1])
     }
 
+    /**
+     * Existing projects should be updated on application startup
+     */
     @Test
     fun testProjectsUpdatedOnStartup() {
         val project1Dir = newProject("project1", "one.yml")

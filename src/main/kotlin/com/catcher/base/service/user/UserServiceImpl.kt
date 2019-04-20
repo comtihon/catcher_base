@@ -17,15 +17,13 @@ class UserServiceImpl(@Autowired val userRepository: UserRepository,
         val existing: User? = userRepository.findById(user.email).orElse(null)
         if (existing != null)
             throw EmailExistsException("User with name %s exists".format(user.email))
-        var roles = user.role.mapNotNull { roleRepository.findByName(it) }.toMutableSet()
-        if (roles.isEmpty())
-            roles = mutableSetOf(roleRepository.findByName("user")!!)
+        // TODO do not allow create users with non-user role (except creating user is admin himself)!
         val userDao = User(email = user.email,
                 name = user.name ?: "",
                 phash = passwordEncoder.encode(user.password.orEmpty()),
                 teams = emptySet(),
                 lastLogin = null,
-                roles = roles)
+                role = roleRepository.findByName(user.role ?: "user")!!)
         userRepository.save(userDao)
         return userDao
     }

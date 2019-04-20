@@ -11,10 +11,14 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.test.annotation.DirtiesContext
+import org.springframework.transaction.annotation.Transactional
 import java.nio.file.Path
 import java.nio.file.Paths
 
 
+@Transactional
+@DirtiesContext
 internal class ProjectScannerTest : IntegrationTest() {
 
     @Autowired
