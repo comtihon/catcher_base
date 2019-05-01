@@ -18,8 +18,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 import javax.annotation.PostConstruct
 import org.springframework.security.core.context.SecurityContextHolder
-
-
+import org.springframework.transaction.annotation.Transactional
 
 
 // TODO Async
@@ -42,6 +41,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
         projectRepo.deleteById(projectId)
     }
 
+    @Transactional
     override fun newProject(projectDto: ProjectDTO): ProjectDTO {
         var existing = projectRepo.findProjectByName(projectDto.name)
         val isNew =
@@ -51,7 +51,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
                     true
                 } else { // update existing project
                     existing.apply {
-                        this.remotePath = projectDto.remotePath
+                        this.remotePath = projectDto.remotePath ?: ""
                         this.name = projectDto.name
                     }
                     false
@@ -61,7 +61,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
         return saved.toDTO()
     }
 
-    override fun getAll(): List<ProjectDTO> {
+    override fun getAllForUser(): List<ProjectDTO> {
         return projectRepo.getAllForCurrentUser().map { it.toDTO() }
     }
 
@@ -69,16 +69,18 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
         return projectRepo.findById(projectId).map { it.toDTO() }.orElseThrow(::ProjectNotFoundException)
     }
 
+    @Transactional
     override fun addTeamToProject(projectId: Int, teamDto: TeamDTO) {
         val team: Team = teamRepository.findById(teamDto.name).orElseThrow { throw TeamNotFoundException() }
         val project: Project = projectRepo.findById(projectId).orElseThrow { throw ProjectNotFoundException() }
-        project.teams.add(team)  // TODO do I need to save project manually?
+        project.teams.add(team)
     }
 
+    @Transactional
     override fun removeTeamFromProject(projectId: Int, teamDto: TeamDTO) {
         val team: Team = teamRepository.findById(teamDto.name).orElseThrow { throw TeamNotFoundException() }
         val project: Project = projectRepo.findById(projectId).orElseThrow { throw ProjectNotFoundException() }
-        project.teams.remove(team) // TODO do I need to save project manually?
+        project.teams.remove(team)
     }
 
     /**
@@ -114,9 +116,9 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
             projectDto.localPath = projectDir().toAbsolutePath().resolve(Paths.get(projectDto.name)).toString()
         }
         with(projectDto) {
-            Paths.get(localPath, ProjectScanner.TEST_DIR).toFile().mkdir()
-            Paths.get(localPath, ProjectScanner.STEPS_DIR).toFile().mkdir()
-            Paths.get(localPath, ProjectScanner.RES_DIR).toFile().mkdir()
+            Paths.get(localPath, ProjectScanner.TEST_DIR).toFile().mkdirs()
+            Paths.get(localPath, ProjectScanner.STEPS_DIR).toFile().mkdirs()
+            Paths.get(localPath, ProjectScanner.RES_DIR).toFile().mkdirs()
         }
     }
 }

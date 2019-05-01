@@ -3,19 +3,18 @@ package com.catcher.base
 import com.catcher.base.data.dao.User
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
-import org.junit.After
-import org.junit.Before
-import org.junit.ClassRule
+import org.junit.*
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.util.TestPropertyValues
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.boot.web.server.LocalServerPort
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.http.*
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.util.LinkedMultiValueMap
@@ -29,6 +28,7 @@ import java.time.Duration
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(initializers = [IntegrationTest.Initializer::class])
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 abstract class IntegrationTest {
 
     @Value("\${security.oauth2.client.client-id}")
@@ -52,9 +52,6 @@ abstract class IntegrationTest {
     protected val userEmail = "test2@test.de"
     protected val userPass = "test"
 
-    @LocalServerPort
-    var port: Int = 0
-
     @Before
     fun setUp() {
         userRepository.save(User(email = adminEmail, name = "test1",
@@ -69,6 +66,18 @@ abstract class IntegrationTest {
     fun tearDown() {
         Paths.get("projects").toFile().deleteRecursively()
     }
+
+    fun <T> postWithToken(path: String, body: Any, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
+            withToken(path, token, body, HttpMethod.POST, responseType)
+
+    fun <T> getWithToken(path: String, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
+            withToken(path, token, null, HttpMethod.GET, responseType)
+
+    fun <T> putWithToken(path: String, body: Any, token: Map<*, *>, responseType: Class<T>) =
+            withToken(path, token, body, HttpMethod.PUT, responseType)
+
+    fun <T> delWithToken(path: String, token: Map<*, *>, responseType: Class<T>) =
+            withToken(path, token, null, HttpMethod.DELETE, responseType)
 
     fun getToken(username: String, password: String): Map<*, *> {
         val request = LinkedMultiValueMap<String, String>()
@@ -106,4 +115,12 @@ abstract class IntegrationTest {
 
     // workaround for https://youtrack.jetbrains.com/issue/KT-17186
     class KPostgreSQLContainer(image: String) : PostgreSQLContainer<KPostgreSQLContainer>(image)
+
+    private fun <T> withToken(path: String, token: Map<*, *>, body: Any?, method: HttpMethod, responseType: Class<T>): ResponseEntity<T> {
+        val headers = HttpHeaders()
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer ${token["access_token"]}")
+        headers.contentType = MediaType.APPLICATION_JSON
+        val uri = UriComponentsBuilder.fromPath(path)
+        return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
+    }
 }

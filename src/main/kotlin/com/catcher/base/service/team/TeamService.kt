@@ -6,6 +6,11 @@ import com.catcher.base.data.dto.UserDTO
 interface TeamService {
     fun newTeam(team: TeamDTO): TeamDTO
 
+    /**
+     * Add user to a team.
+     * @param name - team name
+     * @param userDto - user dto object. Only email is used.
+     */
     fun addUserToTeam(name: String, userDto: UserDTO)
 
     fun removeUserFromTeam(name: String, userDto: UserDTO)

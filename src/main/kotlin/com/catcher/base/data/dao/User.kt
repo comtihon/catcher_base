@@ -11,10 +11,7 @@ data class User(@Id val email: String,
                 @Column(length = 60)
                 val phash: String,
                 val lastLogin: LocalDateTime?,
-                @ManyToMany
-                @JoinTable(name = "users_teams",
-                        joinColumns = [JoinColumn(name = "user_email", referencedColumnName = "email")],
-                        inverseJoinColumns = [JoinColumn(name = "team_name", referencedColumnName = "name")])
+                @ManyToMany(mappedBy = "users")
                 val teams: Set<Team>,
                 @ManyToOne
                 val role: Role) {

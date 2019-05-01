@@ -40,18 +40,18 @@ CREATE TABLE roles_privileges
   CONSTRAINT pk_roles_privileges PRIMARY KEY (role_id, privilege_id)
 );
 
-CREATE TABLE users_teams
+CREATE TABLE teams_users
 (
-  user_email varchar(255) REFERENCES users (email),
-  team_name  varchar(255) REFERENCES teams (name),
-  CONSTRAINT pk_users_teams PRIMARY KEY (user_email, team_name)
+  users_email varchar(255) REFERENCES users (email),
+  teams_name  varchar(255) REFERENCES teams (name),
+  CONSTRAINT pk_teams_users PRIMARY KEY (users_email, teams_name)
 );
 
 CREATE TABLE projects_teams
 (
-  project_id integer REFERENCES projects (id),
-  team_name  varchar(255) REFERENCES teams (name),
-  CONSTRAINT pk_projects_teams PRIMARY KEY (project_id, team_name)
+  projects_id integer REFERENCES projects (id),
+  teams_name  varchar(255) REFERENCES teams (name),
+  CONSTRAINT pk_projects_teams PRIMARY KEY (projects_id, teams_name)
 );
 
 CREATE TABLE tests

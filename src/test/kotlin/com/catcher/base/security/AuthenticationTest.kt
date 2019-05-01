@@ -1,14 +1,15 @@
 package com.catcher.base.security
 
-import com.catcher.base.IntegrationTest
+import com.catcher.base.FunctionalTest
 import com.catcher.base.data.dto.ProjectDTO
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.http.*
+import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
 
 
-class AuthenticationTest : IntegrationTest() {
+class AuthenticationTest : FunctionalTest() {
 
     /**
      * Should not allow users with wrong credentials
@@ -36,14 +37,10 @@ class AuthenticationTest : IntegrationTest() {
      */
     @Test
     fun unauthorizedFail() {
-        val token = getToken(userEmail, userPass)
-        val headers = HttpHeaders()
-        headers.add(HttpHeaders.AUTHORIZATION, "Bearer ${token["access_token"]}")
-        headers.contentType = MediaType.APPLICATION_JSON
         val project = ProjectDTO(null, "test_project1", null, ".")
-        val request = HttpEntity(project, headers)
-        val uri = UriComponentsBuilder.fromPath("/api/v1/project")
-        val result = template.exchange(uri.build().toUri(), HttpMethod.POST, request, String::class.java)
+        val result = getToken(userEmail, userPass).run {
+            postWithToken("/api/v1/project", project, this, String::class.java)
+        }
         Assert.assertEquals(HttpStatus.FORBIDDEN, result.statusCode)
     }
 
@@ -63,13 +60,38 @@ class AuthenticationTest : IntegrationTest() {
      */
     @Test
     fun authorizedOk() {
-        val token = getToken(adminEmail, adminPass)
+        val resultAdmin = getToken(adminEmail, adminPass).run {
+            getWithToken("/api/v1/project", this, String::class.java)
+        }
+        Assert.assertEquals(HttpStatus.OK, resultAdmin.statusCode)
+        val resultUser = getToken(userEmail, userPass).run {
+            getWithToken("/api/v1/project", this, String::class.java)
+        }
+        Assert.assertEquals(HttpStatus.OK, resultUser.statusCode)
+    }
+
+    private fun getToken(username: String, password: String): Map<*, *> {
+        val request = LinkedMultiValueMap<String, String>()
+        request.set("username", username)
+        request.set("password", password)
+        request.set("grant_type", "password")
+
+        return template.withBasicAuth(clientId, secret)
+                .postForObject(UriComponentsBuilder.fromPath("/oauth/token").build().toUri(),
+                        request, Map::class.java)
+    }
+
+    private fun <T> postWithToken(path: String, body: Any, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
+            withToken(path, token, body, HttpMethod.POST, responseType)
+
+    private fun <T> getWithToken(path: String, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
+            withToken(path, token, null, HttpMethod.GET, responseType)
+
+    private fun <T> withToken(path: String, token: Map<*, *>, body: Any?, method: HttpMethod, responseType: Class<T>): ResponseEntity<T> {
         val headers = HttpHeaders()
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer ${token["access_token"]}")
         headers.contentType = MediaType.APPLICATION_JSON
-        val uri = UriComponentsBuilder.fromPath("/api/v1/project")
-        val result = template.exchange(uri.build().toUri(), HttpMethod.GET,
-                HttpEntity<String>(headers), String::class.java)
-        Assert.assertEquals(HttpStatus.OK, result.statusCode)
+        val uri = UriComponentsBuilder.fromPath(path)
+        return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
     }
 }

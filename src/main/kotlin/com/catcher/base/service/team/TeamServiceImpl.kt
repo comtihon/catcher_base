@@ -10,6 +10,7 @@ import com.catcher.base.exception.TeamNotFoundException
 import com.catcher.base.exception.UserNotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 // TODO async
 @Service
@@ -19,16 +20,18 @@ class TeamServiceImpl(@Autowired val teamRepository: TeamRepository,
         return teamRepository.save(team.toDAO()).toDTO()
     }
 
+    @Transactional
     override fun addUserToTeam(name: String, userDto: UserDTO) {
         val team: Team = teamRepository.findById(name).orElseThrow { throw TeamNotFoundException() }
         val user: User = userRepository.findById(userDto.email).orElseThrow { throw UserNotFoundException() }
-        team.users.add(user) // TODO do I need to save team manually?
+        team.users.add(user)
     }
 
+    @Transactional
     override fun removeUserFromTeam(name: String, userDto: UserDTO) {
         val team: Team = teamRepository.findById(name).orElseThrow { throw TeamNotFoundException() }
         val user: User = userRepository.findById(userDto.email).orElseThrow { throw UserNotFoundException() }
-        team.users.remove(user) // TODO do I need to save team manually?
+        team.users.remove(user)
     }
 
     override fun deleteTeam(name: String) {

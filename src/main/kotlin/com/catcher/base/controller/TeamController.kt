@@ -18,7 +18,7 @@ class TeamController(@Autowired val teamService: TeamService) {
     }
 
     @GetMapping
-    fun listALl(): List<TeamDTO> {
+    fun listAll(): List<TeamDTO> {
         return teamService.getAll()
     }
 
@@ -39,6 +39,6 @@ class TeamController(@Autowired val teamService: TeamService) {
 
     @DeleteMapping("/{name}")
     fun delTeam(@PathVariable name: String) {
-        teamService.deleteTeam(name) // TODO check rules (admin only) testme
+        teamService.deleteTeam(name)
     }
 }

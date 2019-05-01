@@ -1,20 +1,14 @@
 package com.catcher.base.service.project
 
-import com.catcher.base.IntegrationTest
 import com.catcher.base.data.repository.ProjectRepository
 import com.catcher.base.data.repository.TestRepository
 import com.catcher.base.service.project.ProjectScanner.Companion.TEST_DIR
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.transaction.annotation.Transactional
-import java.nio.file.Path
 import java.nio.file.Paths
 
-@Transactional
-@DirtiesContext
-internal class ScanOnRuntimeTest : IntegrationTest() {
+internal class ScanOnRuntimeTest : ProjectTest() {
 
     @Autowired
     lateinit var projectRepository: ProjectRepository
@@ -85,15 +79,5 @@ internal class ScanOnRuntimeTest : IntegrationTest() {
         // both old and new test are linked to project
         val tests = projectRepository.findProjectByName("project1")!!.tests.toList()
         Assert.assertEquals(2, tests.size)
-    }
-
-    fun newProject(name: String, vararg tests: String): Path {
-        val projects = Paths.get("projects").toAbsolutePath()
-        val projectDir = Paths.get(projects.toString(), name)
-        projectDir.toFile().mkdirs()
-        val testDir = Paths.get(projectDir.toString(), TEST_DIR).toFile()
-        testDir.mkdirs()
-        tests.forEach { Paths.get(testDir.toString(), it).toFile().createNewFile() }
-        return projectDir
     }
 }

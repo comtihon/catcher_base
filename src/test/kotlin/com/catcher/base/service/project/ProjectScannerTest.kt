@@ -1,7 +1,5 @@
 package com.catcher.base.service.project
 
-import com.catcher.base.IntegrationTest
-import com.catcher.base.data.dao.Project
 import com.catcher.base.data.repository.ProjectRepository
 import com.catcher.base.data.repository.TestRepository
 import com.catcher.base.service.project.ProjectScanner.Companion.TEST_DIR
@@ -11,15 +9,10 @@ import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
-import org.springframework.test.annotation.DirtiesContext
-import org.springframework.transaction.annotation.Transactional
-import java.nio.file.Path
 import java.nio.file.Paths
 
 
-@Transactional
-@DirtiesContext
-internal class ProjectScannerTest : IntegrationTest() {
+internal class ProjectScannerTest : ProjectTest() {
 
     @Autowired
     lateinit var scanner: ProjectScanner
@@ -29,18 +22,6 @@ internal class ProjectScannerTest : IntegrationTest() {
 
     @Autowired
     lateinit var testRepository: TestRepository
-
-    val testProjectDir = Paths.get(java.io.File(".").canonicalPath,
-            "src",
-            "test",
-            "resources",
-            this.javaClass.name)!!
-
-    @After
-    override fun tearDown() {
-        super.tearDown()
-        testProjectDir.toFile().deleteRecursively()
-    }
 
     /**
      * Just a simple scan
@@ -154,23 +135,5 @@ internal class ProjectScannerTest : IntegrationTest() {
         val tests = project.tests.toList().sortedBy { it.name }
         assertEquals("baz.yaml", tests[0].name)
         assertEquals("foo.json", tests[1].name)
-    }
-
-    private fun createStubProject(): Project {
-        val projectDir = Paths.get(testProjectDir.toString(), "testProject")
-        projectDir.toFile().mkdirs()
-        val testDir = Paths.get(projectDir.toString(), TEST_DIR)
-        testDir.toFile().mkdirs()
-        return Project(0,
-                "testProject",
-                projectDir.toString(),
-                null,
-                mutableSetOf(),
-                mutableSetOf())
-    }
-
-    private fun addTest(testPath: Path) {
-        testPath.parent.toFile().mkdirs()
-        testPath.toFile().createNewFile()
     }
 }

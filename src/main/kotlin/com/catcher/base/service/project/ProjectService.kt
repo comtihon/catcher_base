@@ -6,7 +6,7 @@ import com.catcher.base.data.dto.TeamDTO
 interface ProjectService {
     fun newProject(projectDto: ProjectDTO): ProjectDTO
 
-    fun getAll(): List<ProjectDTO>
+    fun getAllForUser(): List<ProjectDTO>
 
     fun findById(projectId: Int): ProjectDTO
 

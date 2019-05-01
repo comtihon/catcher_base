@@ -28,6 +28,28 @@ repositories {
     mavenCentral()
 }
 
+sourceSets {
+    test_integration {
+        kotlin {
+            compileClasspath += sourceSets["main"].output + configurations["testRuntimeClasspath"]
+            runtimeClasspath += output + compileClasspath + sourceSets["test"].runtimeClasspath
+            srcDir file('src/test_integration/kotlin')
+        }
+        java {
+            compileClasspath += main.output
+            runtimeClasspath += main.output
+            srcDir file('src/test_integration/java')
+        }
+        resources.srcDir file('src/test_integration/resources')
+    }
+}
+
+configurations {
+    test_integrationTestCompile.extendsFrom testCompile
+    test_integrationTestRuntime.extendsFrom testRuntime
+    test_integrationImplementation.extendsFrom implementation
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation('org.springframework.boot:spring-boot-starter-jdbc')
@@ -52,6 +74,7 @@ dependencies {
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
     testCompile "org.testcontainers:postgresql:1.11.2"
+    testCompile('com.h2database:h2:1.4.199')
 }
 
 compileKotlin {
@@ -71,3 +94,10 @@ compileTestKotlin {
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 }
+
+task test_integration(type: Test) {
+    testClassesDirs = sourceSets.test_integration.output.classesDirs
+    classpath = sourceSets.test_integration.runtimeClasspath
+}
+
+check.dependsOn test_integration  

@@ -18,7 +18,7 @@ class ProjectController(@Autowired val projectService: ProjectService) {
 
     @GetMapping
     fun listAll(): List<ProjectDTO> {
-        return projectService.getAll()
+        return projectService.getAllForUser()
     }
 
     @GetMapping("/{id}")
