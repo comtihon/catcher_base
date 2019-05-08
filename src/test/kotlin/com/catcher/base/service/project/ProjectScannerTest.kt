@@ -3,7 +3,6 @@ package com.catcher.base.service.project
 import com.catcher.base.data.repository.ProjectRepository
 import com.catcher.base.data.repository.TestRepository
 import com.catcher.base.service.project.ProjectScanner.Companion.TEST_DIR
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test

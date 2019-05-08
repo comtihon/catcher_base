@@ -2,6 +2,7 @@ package com.catcher.base.controller
 
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.dto.UserDTO
+import com.catcher.base.exception.TeamNotFoundException
 import com.catcher.base.service.team.TeamService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -22,9 +23,16 @@ class TeamController(@Autowired val teamService: TeamService) {
         return teamService.getAll()
     }
 
+    // TODO request team membership from a normal user
+
+    @GetMapping("/my")
+    fun my(): List<TeamDTO> {
+        return teamService.getAllForUser()
+    }
+
     @GetMapping("/{name}")
     fun get(@PathVariable name: String): TeamDTO {
-        return teamService.findByName(name) ?: throw Exception("No such team %s".format(name))
+        return teamService.findByName(name) ?: throw TeamNotFoundException("No such team %s".format(name))
     }
 
     @PutMapping("/{name}/add_user")

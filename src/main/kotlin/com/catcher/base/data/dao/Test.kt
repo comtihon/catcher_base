@@ -1,5 +1,6 @@
 package com.catcher.base.data.dao
 
+import com.catcher.base.data.dto.TestDTO
 import javax.persistence.*
 
 @Entity
@@ -32,5 +33,9 @@ data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 
     override fun toString(): String {
         return "Test(id=$id, name='$name', path='$path')"
+    }
+
+    fun toDTO(): TestDTO {
+        return TestDTO(id, name, path, null) // TODO data
     }
 }

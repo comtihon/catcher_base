@@ -8,7 +8,8 @@ data class ProjectDTO(val projectId: Int?,
                       @NotEmpty @NotNull
                       val name: String,
                       val remotePath: String?,
-                      var localPath: String?) {
+                      var localPath: String?,
+                      val tests: List<TestDTO>) {
     fun toDAO(): Project {
         return Project(projectId ?: 0,
                 name,

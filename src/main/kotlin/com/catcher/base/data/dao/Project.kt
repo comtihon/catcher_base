@@ -15,7 +15,7 @@ data class Project(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    @OneToMany(cascade = [CascadeType.REMOVE])
                    val tests: MutableSet<Test>) {
     fun toDTO(): ProjectDTO {
-        return ProjectDTO(id, name, remotePath, localPath)
+        return ProjectDTO(id, name, remotePath, localPath, tests.map(Test::toDTO))
     }
 
     override fun equals(other: Any?): Boolean {

@@ -1,6 +1,5 @@
 package com.catcher.base.service.project
 
-import com.catcher.base.data.dto.ProjectDTO
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,7 +23,7 @@ class ProjectServiceTest : ProjectTest() {
         // local directory doesn't exist
         val projectDir = Paths.get(localDir, "projects", "test_project").toFile()
         Assert.assertFalse(projectDir.exists())
-        val created = projectService.newProject(ProjectDTO(0, "test_project", null, null))
+        val created = projectService.newProject(newProjectDTO("test_project"))
         Assert.assertEquals("", created.remotePath)
         Assert.assertEquals("${Paths.get(localDir).toAbsolutePath()}/projects/test_project", created.localPath)
         // local directories were created
@@ -55,11 +54,11 @@ class ProjectServiceTest : ProjectTest() {
      */
     @Test
     fun existingProjectNoLocalPath() {
-        val created = projectService.newProject(ProjectDTO(0, "test_project", null, null))
+        val created = projectService.newProject(newProjectDTO( "test_project"))
         Assert.assertEquals("", created.remotePath)
         Assert.assertEquals("${Paths.get(localDir).toAbsolutePath()}/projects/test_project", created.localPath)
 
-        val created2 = projectService.newProject(ProjectDTO(0, "test_project", null, null))
+        val created2 = projectService.newProject(newProjectDTO("test_project"))
         Assert.assertEquals("", created2.remotePath)
         Assert.assertEquals("${Paths.get(localDir).toAbsolutePath()}/projects/test_project", created2.localPath)
         Assert.assertEquals(created, created2)

@@ -19,5 +19,7 @@ interface TeamService {
 
     fun getAll(): List<TeamDTO>
 
+    fun getAllForUser(): List<TeamDTO>
+
     fun findByName(name: String): TeamDTO?
 }

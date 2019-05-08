@@ -62,13 +62,6 @@ CREATE TABLE tests
   project_id integer REFERENCES projects (id)
 );
 
-CREATE TABLE projects_tests
-(
-  project_id integer REFERENCES projects (id),
-  tests_id  integer REFERENCES tests (id),
-  CONSTRAINT pk_projects_tests PRIMARY KEY (project_id, tests_id)
-);
-
 CREATE TYPE run_status AS ENUM
 (
  'STARTED',

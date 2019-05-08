@@ -13,12 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import javax.annotation.PostConstruct
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.transaction.annotation.Transactional
 
 
 // TODO Async
@@ -97,7 +96,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
             val name = it.fileName.toString()
             var existing = projectRepo.findProjectByName(name)
             if (existing == null) { // new project - only index project as we have no information about remote
-                existing = ProjectDTO(0, name, null, it.toString()).toDAO()
+                existing = ProjectDTO(0, name, null, it.toString(), emptyList()).toDAO()
                 projectRepo.save(existing)
                 scanner.indexProject(existing)
             } else { // existing project

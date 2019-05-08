@@ -15,6 +15,12 @@ class RoleIdRequiredException(msg: String) : RuntimeException(msg) {
 }
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-class BadAuthException(msg: String) : RuntimeException(msg) {
-    constructor() : this("Invalid username/password supplied")
+class NoTestContentException(msg: String) : RuntimeException(msg) {
+    constructor() : this("No content was provided")
 }
+
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+class FileException(msg: String) : RuntimeException(msg)
+
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+class ParamRequiredException(msg: String): RuntimeException(msg)

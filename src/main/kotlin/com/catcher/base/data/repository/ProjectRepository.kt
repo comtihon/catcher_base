@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProjectRepository : CrudRepository<Project, Int> {
     @Query("SELECT p FROM Project p JOIN p.teams t JOIN t.users u WHERE u.email = ?#{ principal }")
-    fun getAllForCurrentUser(): List<Project>  // TODO testme (see generated query)
+    fun getAllForCurrentUser(): List<Project>
 
     fun findProjectByName(name: String): Project?
 }

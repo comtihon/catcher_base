@@ -11,7 +11,7 @@ data class Team(@Id val name: String,
                 @ManyToMany(mappedBy = "teams")
                 val projects: MutableSet<Project>) {
     fun toDTO(): TeamDTO {
-        return TeamDTO(name)
+        return TeamDTO(name, users.map(User::toDTO))
     }
 
     override fun equals(other: Any?): Boolean {

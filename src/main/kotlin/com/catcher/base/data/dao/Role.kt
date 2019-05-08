@@ -15,7 +15,7 @@ data class Role(@Id @GeneratedValue(strategy = GenerationType.AUTO)
                         inverseJoinColumns = [JoinColumn(name = "privilege_id", referencedColumnName = "id")])
                 val privileges: MutableSet<Privilege>) {
     fun toDTO(): RoleDTO {
-        return RoleDTO(id, name, privileges.map { it.name })
+        return RoleDTO(id, name, privileges.map(Privilege::name))
     }
 
     override fun equals(other: Any?): Boolean {

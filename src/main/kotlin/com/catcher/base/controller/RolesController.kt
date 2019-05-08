@@ -9,6 +9,8 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/api/v1/roles")
 class RolesController(@Autowired val rolesService: RolesService) {
+    // TODO testme
+    // TODO restrict access
 
     @GetMapping("/privileges")
     fun getAllPrivileges(): List<String> {

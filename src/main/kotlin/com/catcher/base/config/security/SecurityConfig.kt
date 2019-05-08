@@ -32,6 +32,7 @@ class SecurityConfig(@Autowired val userDetailsService: AppUserDetailsService) :
                 .anonymous().disable()
                 .authorizeRequests()
                 .antMatchers("/oauth/token").permitAll()
+                .antMatchers("/oauth/error").permitAll()
     }
 
     @Bean

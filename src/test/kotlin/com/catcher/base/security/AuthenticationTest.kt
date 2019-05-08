@@ -1,11 +1,9 @@
 package com.catcher.base.security
 
 import com.catcher.base.FunctionalTest
-import com.catcher.base.data.dto.ProjectDTO
 import org.junit.Assert
 import org.junit.Test
 import org.springframework.http.*
-import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
 
 
@@ -37,7 +35,7 @@ class AuthenticationTest : FunctionalTest() {
      */
     @Test
     fun unauthorizedFail() {
-        val project = ProjectDTO(null, "test_project1", null, ".")
+        val project = newProjectDTO("test_project1", localPath = ".")
         val result = getToken(userEmail, userPass).run {
             postWithToken("/api/v1/project", project, this, String::class.java)
         }
@@ -68,30 +66,5 @@ class AuthenticationTest : FunctionalTest() {
             getWithToken("/api/v1/project", this, String::class.java)
         }
         Assert.assertEquals(HttpStatus.OK, resultUser.statusCode)
-    }
-
-    private fun getToken(username: String, password: String): Map<*, *> {
-        val request = LinkedMultiValueMap<String, String>()
-        request.set("username", username)
-        request.set("password", password)
-        request.set("grant_type", "password")
-
-        return template.withBasicAuth(clientId, secret)
-                .postForObject(UriComponentsBuilder.fromPath("/oauth/token").build().toUri(),
-                        request, Map::class.java)
-    }
-
-    private fun <T> postWithToken(path: String, body: Any, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
-            withToken(path, token, body, HttpMethod.POST, responseType)
-
-    private fun <T> getWithToken(path: String, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
-            withToken(path, token, null, HttpMethod.GET, responseType)
-
-    private fun <T> withToken(path: String, token: Map<*, *>, body: Any?, method: HttpMethod, responseType: Class<T>): ResponseEntity<T> {
-        val headers = HttpHeaders()
-        headers.add(HttpHeaders.AUTHORIZATION, "Bearer ${token["access_token"]}")
-        headers.contentType = MediaType.APPLICATION_JSON
-        val uri = UriComponentsBuilder.fromPath(path)
-        return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
     }
 }

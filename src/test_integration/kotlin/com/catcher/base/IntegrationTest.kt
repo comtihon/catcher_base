@@ -1,6 +1,7 @@
 package com.catcher.base
 
 import com.catcher.base.data.dao.User
+import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
 import org.junit.*
@@ -123,4 +124,10 @@ abstract class IntegrationTest {
         val uri = UriComponentsBuilder.fromPath(path)
         return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
     }
+
+    protected fun newProjectDTO(name: String, localPath: String? = null) = ProjectDTO(null,
+            "test_project1",
+            null,
+            localPath,
+            emptyList())
 }

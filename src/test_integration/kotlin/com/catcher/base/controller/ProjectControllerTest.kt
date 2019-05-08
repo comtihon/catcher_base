@@ -1,7 +1,6 @@
 package com.catcher.base.controller
 
 import com.catcher.base.IntegrationTest
-import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.dto.UserDTO
 import com.catcher.base.data.repository.ProjectRepository
@@ -12,7 +11,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.*
-import org.springframework.transaction.annotation.Transactional
 
 class ProjectControllerTest : IntegrationTest() {
 
@@ -33,8 +31,8 @@ class ProjectControllerTest : IntegrationTest() {
      */
     @Test
     fun addTeamToProjectAsAdmin() {
-        val project = projectService.newProject(ProjectDTO(null, "test_project1", null, null))
-        val team = teamService.newTeam(TeamDTO("test_team1"))
+        val project = projectService.newProject(newProjectDTO("test_project1"))
+        val team = teamService.newTeam(TeamDTO("test_team1", emptyList()))
         teamService.addUserToTeam(team.name, UserDTO(userEmail, null, null, null))
         val userToken = getToken(userEmail, userPass)
         // get before team added - no projects returned
@@ -57,7 +55,7 @@ class ProjectControllerTest : IntegrationTest() {
      */
     @Test
     fun createProjectAsAdmin() {
-        val project = ProjectDTO(null, "test_project2", null, ".")
+        val project = newProjectDTO("test_project2", ".")
         val result = getToken(adminEmail, adminPass).run {
             postWithToken("/api/v1/project", project, this, String::class.java)
         }
@@ -71,8 +69,8 @@ class ProjectControllerTest : IntegrationTest() {
      */
     @Test
     fun removeOneTeamFromProject() {
-        val project = projectService.newProject(ProjectDTO(null, "test_project3", null, null))
-        val team = teamService.newTeam(TeamDTO("test_team3"))
+        val project = projectService.newProject(newProjectDTO("test_project3"))
+        val team = teamService.newTeam(TeamDTO("test_team3", emptyList()))
         teamService.addUserToTeam(team.name, UserDTO(userEmail, null, null, null))
         projectService.addTeamToProject(project.projectId!!, team)
         val userToken = getToken(userEmail, userPass)
@@ -96,8 +94,8 @@ class ProjectControllerTest : IntegrationTest() {
      */
     @Test
     fun deleteProjectWithTeamAssigned() {
-        val project = projectService.newProject(ProjectDTO(null, "test_project4", null, null))
-        val team = teamService.newTeam(TeamDTO("test_team4"))
+        val project = projectService.newProject(newProjectDTO("test_project4"))
+        val team = teamService.newTeam(TeamDTO("test_team4", emptyList()))
         teamService.addUserToTeam(team.name, UserDTO(userEmail, null, null, null))
         projectService.addTeamToProject(project.projectId!!, team)
         val userToken = getToken(userEmail, userPass)

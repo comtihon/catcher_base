@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class TeamServiceImpl(@Autowired val teamRepository: TeamRepository,
                       @Autowired val userRepository: UserRepository) : TeamService {
+
     override fun newTeam(team: TeamDTO): TeamDTO {
         return teamRepository.save(team.toDAO()).toDTO()
     }
@@ -40,6 +41,10 @@ class TeamServiceImpl(@Autowired val teamRepository: TeamRepository,
 
     override fun getAll(): List<TeamDTO> {
         return teamRepository.findAll().map { it.toDTO() }
+    }
+
+    override fun getAllForUser(): List<TeamDTO> {
+        return teamRepository.getAllForCurrentUser().map { it.toDTO() }
     }
 
     override fun findByName(name: String): TeamDTO? {

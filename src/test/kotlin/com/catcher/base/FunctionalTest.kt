@@ -3,6 +3,7 @@ package com.catcher.base
 import com.catcher.base.data.dao.Privilege
 import com.catcher.base.data.dao.Role
 import com.catcher.base.data.dao.User
+import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.repository.PrivilegeRepository
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
@@ -13,13 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.*
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.junit4.SpringRunner
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.util.UriComponentsBuilder
 import java.nio.file.Paths
 
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 abstract class FunctionalTest {
 
     @Value("\${security.oauth2.client.client-id}")
@@ -71,4 +77,36 @@ abstract class FunctionalTest {
     fun tearDown() {
         Paths.get("projects").toFile().deleteRecursively()
     }
+
+    protected fun getToken(username: String, password: String): Map<*, *> {
+        val request = LinkedMultiValueMap<String, String>()
+        request.set("username", username)
+        request.set("password", password)
+        request.set("grant_type", "password")
+
+        return template.withBasicAuth(clientId, secret)
+                .postForObject(UriComponentsBuilder.fromPath("/oauth/token").build().toUri(),
+                        request, Map::class.java)
+    }
+
+    protected fun <T> postWithToken(path: String, body: Any, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
+            withToken(path, token, body, HttpMethod.POST, responseType)
+
+    protected fun <T> getWithToken(path: String, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
+            withToken(path, token, null, HttpMethod.GET, responseType)
+
+    private fun <T> withToken(path: String, token: Map<*, *>, body: Any?, method: HttpMethod, responseType: Class<T>): ResponseEntity<T> {
+        val headers = HttpHeaders()
+        headers.add(HttpHeaders.AUTHORIZATION, "Bearer ${token["access_token"]}")
+        headers.contentType = MediaType.APPLICATION_JSON
+        val uri = UriComponentsBuilder.fromPath(path)
+        return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
+    }
+
+
+    protected fun newProjectDTO(name: String, localPath: String? = null) = ProjectDTO(0,
+            name,
+            null,
+            localPath,
+            emptyList())
 }

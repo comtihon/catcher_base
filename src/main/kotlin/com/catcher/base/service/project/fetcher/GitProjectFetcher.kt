@@ -6,6 +6,7 @@ import java.io.File
 
 @Component
 class GitProjectFetcher : ProjectFetcher {
+    // TODO do I need to store keys?
     override fun isRemoteSupported(remote: String): Boolean {
         return remote.startsWith("git")
     }

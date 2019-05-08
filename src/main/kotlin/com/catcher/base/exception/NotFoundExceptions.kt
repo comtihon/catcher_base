@@ -22,3 +22,6 @@ class ProjectNotFoundException(msg: String) : RuntimeException(msg) {
 class RoleNotFoundException(msg: String) : RuntimeException(msg) {
     constructor() : this("No such role")
 }
+
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+class FileNotFoundException(msg: String) : RuntimeException(msg)
