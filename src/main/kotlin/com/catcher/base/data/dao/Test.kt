@@ -36,6 +36,7 @@ data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     }
 
     fun toDTO(): TestDTO {
-        return TestDTO(id, name, path, null) // TODO data
+        // TODO load data from path and add here?
+        return TestDTO(id, name, path, null)
     }
 }

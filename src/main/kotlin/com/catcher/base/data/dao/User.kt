@@ -15,9 +15,7 @@ data class User(@Id val email: String,
                 val teams: Set<Team>,
                 @ManyToOne
                 val role: Role) {
-    fun toDTO(): UserDTO {
-        return UserDTO(email, null, name, role.name)
-    }
+    fun toDTO() = UserDTO(email, null, name, role.name)
 
     override fun toString(): String {
         return "User(email='$email', name='$name', phash='$phash', lastLogin=$lastLogin, role=$role)"

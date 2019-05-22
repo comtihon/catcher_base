@@ -5,6 +5,7 @@ import com.catcher.base.data.dto.TestRunDTO
 import com.catcher.base.service.test.TestService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.concurrent.CompletableFuture
 import javax.validation.Valid
 
 // TODO do not forget to add hasAuthority to SecurityConfig!
@@ -25,12 +26,12 @@ class TestController(@Autowired val testService: TestService) {
 
     // TODO async
     @GetMapping("/run/{id}")
-    fun run(@PathVariable id: Int): TestRunDTO {
+    fun run(@PathVariable id: Int): CompletableFuture<TestRunDTO> {
         return testService.runTest(id)
     }
 
     @GetMapping("/log/{id}")
-    fun log(@PathVariable id: Int): TestRunDTO {
+    fun log(@PathVariable id: Int): TestRunDTO? {
         return testService.status(id)
     }
 }

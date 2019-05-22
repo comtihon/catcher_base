@@ -5,7 +5,6 @@ import java.time.LocalDateTime
 
 data class TestRunDTO(val id: Int,
                       val status: RunStatus,
-                      val started: LocalDateTime,
-                      val finished: LocalDateTime,
-                      val output: String) {
-}
+                      val started: LocalDateTime?,
+                      val finished: LocalDateTime?,
+                      val output: String?)

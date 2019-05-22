@@ -1,20 +1,45 @@
 package com.catcher.base.data.dao
 
+import com.catcher.base.data.dto.TestRunDTO
 import java.time.LocalDateTime
 import javax.persistence.*
 
 enum class RunStatus {
-    STARTED, FAILED, FINISHED, ABORTED
+    QUEUED, STARTED, FAILED, FINISHED, ABORTED
 }
 
 @Entity
 @Table(name = "runs")
 data class TestRun(@Id @GeneratedValue(strategy = GenerationType.AUTO)
                    val id: Int,
-                   val testId: Int,
                    @Enumerated(EnumType.STRING)
-                   val status: RunStatus,
-                   val started: LocalDateTime,
-                   val finished: LocalDateTime,
-                   val output: String) {
+                   var status: RunStatus,
+                   var started: LocalDateTime?,
+                   var finished: LocalDateTime?,
+                   @Column(length=10485760)
+                   var output: String?,
+                   @ManyToOne
+                   val test: Test) {
+    constructor(test: Test) : this(0, RunStatus.QUEUED, null, null, null, test)
+
+    fun toDTO() = TestRunDTO(id, status, started, finished, output)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TestRun
+
+        if (id != other.id) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
+
+    override fun toString(): String {
+        return "TestRun(id=$id, status=$status, started=$started, finished=$finished)"
+    }
 }

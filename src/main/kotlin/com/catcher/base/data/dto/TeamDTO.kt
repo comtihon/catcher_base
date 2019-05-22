@@ -8,7 +8,5 @@ import javax.validation.constraints.NotNull
 data class TeamDTO(@NotEmpty @NotNull @ValidTeamName
                    val name: String,
                    val users: List<UserDTO>) {
-    fun toDAO(): Team {
-        return Team(name, mutableSetOf(), mutableSetOf())
-    }
+    fun toDAO() = Team(name, mutableSetOf(), mutableSetOf())
 }

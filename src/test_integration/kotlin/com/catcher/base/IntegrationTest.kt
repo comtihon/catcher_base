@@ -125,9 +125,10 @@ abstract class IntegrationTest {
         return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
     }
 
-    protected fun newProjectDTO(name: String, localPath: String? = null) = ProjectDTO(null,
-            "test_project1",
-            null,
-            localPath,
-            emptyList())
+    protected fun newProjectDTO(name: String, localPath: String? = null) =
+            ProjectDTO(null,
+                    name,
+                    null,
+                    localPath,
+                    emptyList())
 }

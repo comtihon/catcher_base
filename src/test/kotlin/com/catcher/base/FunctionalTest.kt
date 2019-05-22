@@ -1,12 +1,14 @@
 package com.catcher.base
 
 import com.catcher.base.data.dao.Privilege
+import com.catcher.base.data.dao.Project
 import com.catcher.base.data.dao.Role
 import com.catcher.base.data.dao.User
 import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.repository.PrivilegeRepository
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
+import com.catcher.base.service.project.ProjectScanner
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -20,7 +22,10 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
+import java.nio.file.Path
 import java.nio.file.Paths
+import java.io.FileWriter
+import java.io.BufferedWriter
 
 
 @RunWith(SpringRunner::class)
@@ -33,6 +38,12 @@ abstract class FunctionalTest {
 
     @Value("\${security.oauth2.client.client-secret}")
     val secret: String? = null
+
+    val testProjectDir = Paths.get(java.io.File(".").canonicalPath,
+            "src",
+            "test",
+            "resources",
+            this.javaClass.name)!!
 
     @Autowired
     lateinit var userRepository: UserRepository
@@ -78,6 +89,11 @@ abstract class FunctionalTest {
         Paths.get("projects").toFile().deleteRecursively()
     }
 
+    fun addTest(testPath: Path, content: String = "") {
+        testPath.parent.toFile().mkdirs()
+        FileWriter(testPath.toFile()).use { it.write(content) }
+    }
+
     protected fun getToken(username: String, password: String): Map<*, *> {
         val request = LinkedMultiValueMap<String, String>()
         request.set("username", username)
@@ -109,4 +125,20 @@ abstract class FunctionalTest {
             null,
             localPath,
             emptyList())
+
+    /**
+     * Create project in standalone directory (src/test/resources)
+     */
+    protected fun createStubProject(name: String = "testProject"): Project {
+        val projectDir = Paths.get(testProjectDir.toString(), name)
+        projectDir.toFile().mkdirs()
+        val testDir = Paths.get(projectDir.toString(), ProjectScanner.TEST_DIR)
+        testDir.toFile().mkdirs()
+        return Project(0,
+                "testProject",
+                projectDir.toString(),
+                null,
+                mutableSetOf(),
+                mutableSetOf())
+    }
 }
