@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 import javax.sql.DataSource
 
 
@@ -25,15 +26,16 @@ class AuthorizationServerConfig(@Autowired @Qualifier("authenticationManagerBean
                                 @Autowired
                                 val passwordEncoder: PasswordEncoder,
                                 @Autowired
-                                val userDetailsService: AppUserDetailsService,
-                                @Autowired
-                                val dataSource: DataSource) : AuthorizationServerConfigurerAdapter() {
+                                val userDetailsService: AppUserDetailsService) : AuthorizationServerConfigurerAdapter() {
 
     @Value("\${spring.security.oauth2.client.clientId}")
     private val clientId: String? = null
 
     @Value("\${spring.security.oauth2.client.clientSecret}")
     private val clientSecret: String? = null
+
+    @Value("\${catcher.base.jwt.private:catcher_priv}")
+    private val jwtPrivate: String? = null
 
     @Value("\${jwt.accessTokenValidititySeconds:43200}") // 12 hours
     private val accessTokenValiditySeconds: Int = 0
@@ -63,10 +65,14 @@ class AuthorizationServerConfig(@Autowired @Qualifier("authenticationManagerBean
     }
 
     @Bean
-    fun tokenStore(): TokenStore {  // TODO JwtTokenStore
-        return JdbcTokenStore(dataSource)
+    fun tokenStore(): TokenStore {
+        return JwtTokenStore(accessTokenConverter())
     }
 
     @Bean
-    fun accessTokenConverter(): JwtAccessTokenConverter = JwtAccessTokenConverter()
+    fun accessTokenConverter(): JwtAccessTokenConverter {
+        val converter = JwtAccessTokenConverter()
+        converter.setSigningKey(jwtPrivate)
+        return converter
+    }
 }

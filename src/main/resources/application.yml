@@ -19,6 +19,8 @@ spring:
 catcher:
   base:
     local_dir: \${LOCAL_DIR:./}
+    jwt:
+      private: \${JWT_PRIV:catcher_priv}
   system:
     conda_name: catcher_base_env
   executor:

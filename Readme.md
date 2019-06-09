@@ -18,4 +18,5 @@ __LOCAL_DIR__ - local directory for projects storage. `./` is default. Only loca
 paths are supported right now.  
 __SERVER_PORT__ - which port to listen. `8080` is default. You can also use `-Dserver.port` java arg.  
 __ADMIN_USER__ - admin user email/name. Will be created on startup, if there are no other admin users in the database.  
-__ADMIN_PASS__ - admin user password.
+__ADMIN_PASS__ - admin user password.  
+__JWT_PRIV__ - set your own secret key for jwt token encryption (highly recommended).
