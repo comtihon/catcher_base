@@ -39,7 +39,7 @@ class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
         if (test.data == null && test.path == null)
             throw NoTestContentException()
         val project = projectRepo.findByIdOrNull(projectId) ?: throw ProjectNotFoundException()
-        if (test.path == null) {
+        if (test.path == null) {  // TODO test storage (local FS/FTP/Database/git)?
             test.path = createFile(Paths.get(project.localPath, ProjectScanner.TEST_DIR, test.name), test.data!!)
         }
         val savedTest = testRepository.save(Test(0,

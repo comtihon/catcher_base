@@ -12,20 +12,27 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer
+import org.springframework.security.oauth2.provider.token.TokenStore
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
+import javax.sql.DataSource
 
 
 @Configuration
 @EnableAuthorizationServer
 class AuthorizationServerConfig(@Autowired @Qualifier("authenticationManagerBean")
                                 val authenticationManager: AuthenticationManager,
+                                @Autowired
                                 val passwordEncoder: PasswordEncoder,
-                                val userDetailsService: AppUserDetailsService) : AuthorizationServerConfigurerAdapter() {
+                                @Autowired
+                                val userDetailsService: AppUserDetailsService,
+                                @Autowired
+                                val dataSource: DataSource) : AuthorizationServerConfigurerAdapter() {
 
-    @Value("\${security.oauth2.client.client-id}")
+    @Value("\${spring.security.oauth2.client.clientId}")
     private val clientId: String? = null
 
-    @Value("\${security.oauth2.client.client-secret}")
+    @Value("\${spring.security.oauth2.client.clientSecret}")
     private val clientSecret: String? = null
 
     @Value("\${jwt.accessTokenValidititySeconds:43200}") // 12 hours
@@ -41,10 +48,11 @@ class AuthorizationServerConfig(@Autowired @Qualifier("authenticationManagerBean
         endpoints.accessTokenConverter(accessTokenConverter())
                 .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsService)
+                .tokenStore(tokenStore())
     }
 
     override fun configure(clients: ClientDetailsServiceConfigurer) {
-        clients.inMemory()  // TODO token must support multiple instances and server's reboot
+        clients.inMemory()
                 .withClient(clientId)
                 .secret(passwordEncoder.encode(clientSecret))
                 .accessTokenValiditySeconds(accessTokenValiditySeconds)
@@ -52,6 +60,11 @@ class AuthorizationServerConfig(@Autowired @Qualifier("authenticationManagerBean
                 .authorizedGrantTypes(*authorizedGrantTypes!!)
                 .scopes("read", "write")
                 .resourceIds("api")
+    }
+
+    @Bean
+    fun tokenStore(): TokenStore {
+        return JdbcTokenStore(dataSource)
     }
 
     @Bean

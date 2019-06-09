@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @ConditionalOnProperty(prefix = "catcher.system", name = ["conda_name"])
-class Conda : SystemTool {
+class Conda : SystemTool() {
 
     @Value("\${catcher.system.conda_name:}")
     private val env: String? = null
@@ -15,7 +15,7 @@ class Conda : SystemTool {
 
     override fun install() {
         // TODO determine target platform and try to install conda https://docs.conda.io/en/latest/miniconda.html
-        "conda create -p $env --copy -y python=$python".runCommand()
+        "conda create -n $env --copy -y python=$python".runCommand()
     }
 
     override fun execute(command: String): String {

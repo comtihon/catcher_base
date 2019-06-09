@@ -13,10 +13,10 @@ import java.util.concurrent.Executor
 @Configuration
 class ServerConfig {
 
-    @Value("\${test_executor.local.pool.max_size:}")
+    @Value("\${catcher.executor.local.pool.max_size:}")
     private val maxSize: Int? = null
 
-    @Value("\${test_executor.local.pool.core_size:}")
+    @Value("\${catcher.executor.local.pool.core_size:}")
     private val coreSize: Int? = null
 
     // TODO move me to LocalTestConfiguration and make it autoconfiguration based on config test_executor.local

@@ -8,7 +8,7 @@ import javax.persistence.*
 data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                 val id: Int,
                 val name: String,
-                val path: String,
+                val path: String,  // TODO store test content in database instead of FS?
                 @OneToMany(cascade = [CascadeType.REMOVE])
                 val runs: MutableSet<TestRun>,
                 @ManyToOne

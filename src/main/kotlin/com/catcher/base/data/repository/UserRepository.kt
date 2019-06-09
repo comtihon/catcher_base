@@ -15,4 +15,7 @@ interface UserRepository : CrudRepository<User, String> {
     @Modifying
     @Transactional
     fun updateLastLogin(@Param("lastLogin") lastLogin: LocalDateTime)
+
+    @Query("SELECT u FROM User u WHERE u.role.name = 'admin'")
+    fun findAdmins(): List<User>
 }

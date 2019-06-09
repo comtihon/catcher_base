@@ -17,3 +17,5 @@ __DB_PASS__ - database password. `test` is default.
 __LOCAL_DIR__ - local directory for projects storage. `./` is default. Only local filesystem
 paths are supported right now.  
 __SERVER_PORT__ - which port to listen. `8080` is default. You can also use `-Dserver.port` java arg.  
+__ADMIN_USER__ - admin user email/name. Will be created on startup, if there are no other admin users in the database.  
+__ADMIN_PASS__ - admin user password.

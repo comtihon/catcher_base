@@ -6,6 +6,10 @@ import com.catcher.base.service.user.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
+import java.security.Principal
+import org.springframework.web.bind.annotation.RequestMapping
+
+
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -15,5 +19,10 @@ class UserController(@Autowired val userService: UserService) {
         if (user.password.isNullOrEmpty())
             throw PasswordRequiredException("Password required")
         return userService.registerUser(user).toDTO()
+    }
+
+    @GetMapping
+    fun user(principal: Principal): Principal {
+        return principal
     }
 }

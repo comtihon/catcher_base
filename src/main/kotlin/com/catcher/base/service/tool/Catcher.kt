@@ -1,5 +1,6 @@
 package com.catcher.base.service.tool
 
+import com.catcher.base.exception.ExecutionFailedException
 import com.catcher.base.service.tool.system.SystemTool
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,12 +12,20 @@ class Catcher(@Autowired val systemTool: SystemTool) {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     fun version(): String {
-        return systemTool.execute("catcher -v")
+        return try {
+            systemTool.execute("catcher -v")
+        } catch (e: ExecutionFailedException) {
+            "not installed"
+        }
     }
 
     fun install() {
         systemTool.execute("pip install catcher")
     }
+
+    // TODO list available modules
+
+    // TODO install module
 
     fun runTest(test: String): String {
         log.debug("Run $test")

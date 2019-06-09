@@ -1,14 +1,13 @@
 package com.catcher.base
 
-import com.catcher.base.data.dao.Privilege
 import com.catcher.base.data.dao.Project
-import com.catcher.base.data.dao.Role
 import com.catcher.base.data.dao.User
 import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.repository.PrivilegeRepository
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
 import com.catcher.base.service.project.ProjectScanner
+import com.catcher.base.utils.recreateRoles
 import org.junit.After
 import org.junit.Before
 import org.junit.runner.RunWith
@@ -22,10 +21,9 @@ import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.context.junit4.SpringRunner
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.util.UriComponentsBuilder
+import java.io.FileWriter
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.io.FileWriter
-import java.io.BufferedWriter
 
 
 @RunWith(SpringRunner::class)
@@ -63,19 +61,7 @@ abstract class FunctionalTest {
 
     @Before
     fun setUp() {
-        if (userRepository.findAll().toList().isEmpty()) {
-            val lt = privilegeRepository.save(Privilege(0, "launch_tests"))
-            val mt = privilegeRepository.save(Privilege(0, "modify_tests"))
-            val ms = privilegeRepository.save(Privilege(0, "modify_steps"))
-            val et = privilegeRepository.save(Privilege(0, "edit_templates"))
-            val mte = privilegeRepository.save(Privilege(0, "modify_teams"))
-            val mp = privilegeRepository.save(Privilege(0, "modify_projects"))
-
-            roleRepository.save(Role(0, "admin", mutableSetOf(),
-                    mutableSetOf(lt, mt, ms, et, mte, mp)))
-            roleRepository.save(Role(0, "user", mutableSetOf(),
-                    mutableSetOf(lt, mt, ms)))
-        }
+        recreateRoles(roleRepository, privilegeRepository)
         userRepository.save(User(email = adminEmail, name = "test1",
                 phash = passwordEncoder.encode(adminPass), lastLogin = null,
                 role = roleRepository.findByName("admin")!!, teams = emptySet()))

@@ -10,7 +10,7 @@ import javax.transaction.NotSupportedException
  */
 @Component
 @ConditionalOnProperty(prefix = "catcher.system", name = ["native_executable"])
-class Native : SystemTool {
+class Native : SystemTool() {
 
     @Value("\${catcher.system.native_executable:}")
     private val executable: String? = null

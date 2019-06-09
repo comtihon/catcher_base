@@ -1,19 +1,22 @@
 package com.catcher.base.service.tool.system
 
 import com.catcher.base.exception.ExecutionFailedException
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 
-interface SystemTool {
-    fun version(): String {
+abstract class SystemTool {
+    private val log = LoggerFactory.getLogger(this::class.java)
+
+    open fun version(): String {
         return execute("python --version")
     }
 
     @Throws(ExecutionFailedException::class)
-    fun install()   // TODO when install should be run? (via UI manually/on start automatically)
+    abstract fun install()   // TODO when install should be run? (via UI manually/on start automatically)
 
     @Throws(ExecutionFailedException::class)
-    fun execute(command: String): String
+    abstract fun execute(command: String): String
 
     @Throws(ExecutionFailedException::class)
     fun String.runCommand(workingDir: File = File(".")): String {
@@ -32,6 +35,9 @@ interface SystemTool {
             proc.waitFor()
             if (proc.exitValue() != 0)
                 throw ExecutionFailedException(proc!!.errorStream.bufferedReader().readText())
+            if (proc.errorStream.available() != 0) {
+                log.warn(proc.errorStream.bufferedReader().readText())
+            }
             return proc.inputStream.bufferedReader().readText()
         } catch (e: IOException) {
             throw ExecutionFailedException(proc!!.errorStream.bufferedReader().readText())

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @ConditionalOnProperty(prefix="catcher.system", name = ["venv_name"])
-class Venv : SystemTool {
+class Venv : SystemTool() {
     @Value("\${catcher.system.venv_name:}")
     private val env: String? = null
     @Value("\${catcher.system.venv_executable:python3}")
