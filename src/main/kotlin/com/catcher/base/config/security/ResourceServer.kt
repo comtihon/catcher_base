@@ -21,6 +21,8 @@ class ResourceServer(@Autowired val tokenStore: TokenStore) : ResourceServerConf
     override fun configure(http: HttpSecurity) {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .requestMatchers().antMatchers("/api/v1/**")
+                .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/user").permitAll() // register
                 .antMatchers(HttpMethod.DELETE, "/api/v1/team").hasAuthority("modify_teams")

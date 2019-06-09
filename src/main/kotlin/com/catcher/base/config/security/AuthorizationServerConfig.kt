@@ -63,7 +63,7 @@ class AuthorizationServerConfig(@Autowired @Qualifier("authenticationManagerBean
     }
 
     @Bean
-    fun tokenStore(): TokenStore {
+    fun tokenStore(): TokenStore {  // TODO JwtTokenStore
         return JdbcTokenStore(dataSource)
     }
 
