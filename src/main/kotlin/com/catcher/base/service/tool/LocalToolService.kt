@@ -23,8 +23,10 @@ class LocalToolService(@Autowired val systemTool: SystemTool,
         }
     }
 
-    override fun pythonVersion(): String {
-        return systemTool.version().trim()
+    override fun pythonVersion(): Pair<String, String> {
+        val toolVer = systemTool.version().trim()
+        val toolName = systemTool::class.simpleName!!
+        return Pair(toolName, toolVer)
     }
 
     override fun catcherVersion(): String {

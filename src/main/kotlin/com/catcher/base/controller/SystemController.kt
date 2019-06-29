@@ -15,8 +15,10 @@ class SystemController(@Autowired val toolService: ToolService) {
 
     @GetMapping
     fun getInfo(): SystemInfoDTO {
+        val python = toolService.pythonVersion()
         return SystemInfoDTO(
-                python = toolService.pythonVersion(),
+                pythonProvider = python.first,
+                pythonVersion = python.second,
                 catcher = toolService.catcherVersion(),
                 version = version!!)
     }

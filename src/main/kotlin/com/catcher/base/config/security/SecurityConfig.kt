@@ -25,10 +25,8 @@ class SecurityConfig(@Autowired val userDetailsService: AppUserDetailsService) :
     override fun configure(http: HttpSecurity) {
         http.csrf().disable()
         http.authorizeRequests()
-                .antMatchers("/oauth/authorize**", "/login**", "/oauth/error").permitAll()
+                .antMatchers("/**", "/login**", "/oauth/error").permitAll()
                 .anyRequest().authenticated()
-                .and()
-                .formLogin().permitAll()
     }
 
     @Bean

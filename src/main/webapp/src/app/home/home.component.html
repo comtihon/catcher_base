@@ -1,0 +1,45 @@
+<main role="main" class="starter-template container-fluid">
+  <div class="row">
+    <div class="col">
+      <p>dashboard for user's active project should be here</p>
+    </div>
+    <div class="col">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            Server version:
+          </div>
+          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.version}}</div>
+          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            Catcher version:
+          </div>
+          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.catcher}}</div>
+          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            Python provider:
+          </div>
+          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.pythonProvider}}</div>
+          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-sm">
+            Python version:
+          </div>
+          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.pythonVersion}}</div>
+          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
