@@ -23,6 +23,7 @@ class UserController(@Autowired val userService: UserService) {
 
     @GetMapping
     fun user(principal: Principal): Principal {
+        // TODO principal to UserDTO, remove password?
         return principal
     }
 }

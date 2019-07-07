@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from "../shared/model/user";
-import {AuthService} from "../shared/services/auth.service";
 import {SystemService} from "../shared/services/system.service";
 import {SystemInfo} from "../shared/model/systemInfo";
+import {UserService} from "../shared/services/user.service";
 
 
 @Component({templateUrl: 'home.component.html'})
@@ -10,9 +10,9 @@ export class HomeComponent implements OnInit {
   currentUser: User;
   systemInfo: SystemInfo;
 
-  constructor(private authenticationService: AuthService,
+  constructor(private userService: UserService,
               private systemService: SystemService) {
-    this.currentUser = this.authenticationService.currentUserValue;
+    this.currentUser = this.userService.currentUserValue;
     this.systemInfo = this.systemService.systemInfoValue
   }
 

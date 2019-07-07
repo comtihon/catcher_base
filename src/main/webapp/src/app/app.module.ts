@@ -12,15 +12,24 @@ import {AlertComponent} from "./components/alert.component";
 import {HomeComponent} from "./home/home.component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { RegisterComponent } from './register/register.component';
+import {RegisterComponent} from './register/register.component';
+import {NavbarComponent} from "./navbar/navbar.component";
+import {SidebarComponent} from "./sidebar/sidebar.component";
+import {FooterComponent} from "./components/footer.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
 
 @NgModule({
   declarations: [
     AppComponent,
+    NavbarComponent,
+    SidebarComponent,
+    FooterComponent,
+    DashboardComponent,
     LoginComponent,
     AlertComponent,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

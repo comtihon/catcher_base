@@ -1,0 +1,36 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <li class="nav-item nav-profile">
+      <div class="nav-link">
+        <div class="user-wrapper">
+          <div class="profile-image">
+            <img src="assets/images/navbar/person.svg" alt="profile image">
+          </div>
+          <div class="text-wrapper">
+            <p class="profile-name">{{ currentUser.name }}</p>
+            <div>
+              <small class="designation text-muted">{{ currentUser.role }}</small>
+              <span class="status-indicator online"></span>
+            </div>
+          </div>
+        </div>
+        <!-- TODO disable button for non-admin users -->
+        <button class="btn btn-success btn-block">New Project
+          <i class="mdi mdi-plus"></i>
+        </button>
+      </div>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/alerts" routerLinkActive="active">
+        <i class="menu-icon mdi mdi-shield-outline"></i>
+        <span class="menu-title">Alerts</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" routerLink="/events" routerLinkActive="active">
+        <i class="menu-icon mdi mdi-altimeter"></i>
+        <span class="menu-title">Events</span>
+      </a>
+    </li>
+  </ul>
+</nav>
