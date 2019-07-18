@@ -1,11 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {User} from "../shared/model/user";
 import {SystemService} from "../shared/services/system.service";
 import {SystemInfo} from "../shared/model/systemInfo";
 import {UserService} from "../shared/services/user.service";
 
 
-@Component({templateUrl: 'home.component.html'})
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: 'home.component.html',
+  styleUrls: ['../app.component.scss','./home.component.scss'],
+  encapsulation: ViewEncapsulation.None
+})
 export class HomeComponent implements OnInit {
   currentUser: User;
   systemInfo: SystemInfo;

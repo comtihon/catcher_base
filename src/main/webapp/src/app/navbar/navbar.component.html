@@ -24,7 +24,7 @@
       <li class="nav-item dropdown" ngbDropdown>
         <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" ngbDropdownToggle>
           <i class="mdi mdi-file-document-box"></i>
-          <span class="count">{{ notifications.events.length }}</span>
+          <span *ngIf="notifications.events.length > 0" class="count">{{ notifications.events.length }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" ngbDropdownMenu
              aria-labelledby="messageDropdown">
@@ -71,7 +71,7 @@
       <li class="nav-item dropdown" ngbDropdown>
         <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" ngbDropdownToggle>
           <i class="mdi mdi mdi-bell"></i>
-          <span class="count">{{ notifications.alerts.length }}</span>
+          <span *ngIf="notifications.alerts.length > 0" class="count">{{ notifications.alerts.length }}</span>
         </a>
         <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" ngbDropdownMenu
              aria-labelledby="notificationDropdown">

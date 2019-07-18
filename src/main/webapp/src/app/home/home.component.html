@@ -1,45 +1,49 @@
-<main role="main" class="starter-template container-fluid">
-  <div class="row">
-    <div class="col">
-      <p>dashboard for user's active project should be here</p>
-    </div>
-    <div class="col">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            Server version:
+<div class="row">
+  <div class="col-lg-7 grid-margin stretch-card">
+
+  </div>
+  <div class="col-lg-5 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="card-title text-primary mb-5">System Info</h2>
+        <div class="wrapper d-flex justify-content-between">
+          <div class="side-left">
+            <p class="mb-2">Server version</p>
+            <p *ngIf="systemInfo" class="display-3 mb-4 font-weight-light">{{systemInfo.version}}</p>
+            <p *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
           </div>
-          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.version}}</div>
-          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
         </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            Catcher version:
+        <div class="wrapper d-flex justify-content-between">
+          <div class="side-left">
+            <p class="mb-2">Catcher version</p>
+            <p *ngIf="systemInfo" class="display-3 mb-5 font-weight-light">{{systemInfo.catcher}}</p>
+            <p *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
           </div>
-          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.catcher}}</div>
-          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
+          <div class="side-right">
+<!--            TODO visible only for admin -->
+            <button type="button" class="btn btn-primary btn-rounded btn-fw">update</button>
+          </div>
         </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            Python provider:
+        <div class="wrapper d-flex justify-content-between">
+          <div class="side-left">
+            <p class="mb-2">Python provider</p>
+            <p *ngIf="systemInfo" class="display-3 mb-5 font-weight-light">{{systemInfo.pythonProvider}}</p>
+            <p *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
           </div>
-          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.pythonProvider}}</div>
-          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
         </div>
-      </div>
-      <div class="container">
-        <div class="row">
-          <div class="col-sm">
-            Python version:
+        <div class="wrapper d-flex justify-content-between">
+          <div class="side-left">
+            <p class="mb-2">Python version</p>
+            <p *ngIf="systemInfo" class="display-3 mb-5 font-weight-light">{{systemInfo.pythonVersion}}</p>
+            <p *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
           </div>
-          <div *ngIf="systemInfo" class="col-sm">{{systemInfo.pythonVersion}}</div>
-          <div *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></div>
+          <div class="side-right">
+<!--            TODO show if updatable (conda & venv) -->
+            <!--            TODO visible only for admin -->
+            <button type="button" class="btn btn-primary btn-rounded btn-fw">update</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</main>
+</div>

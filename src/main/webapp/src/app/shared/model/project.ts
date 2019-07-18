@@ -1,4 +1,5 @@
 import {Test} from "./test";
+import {RunStatus} from "./test";
 
 export class Project {
   projectId: number;
@@ -9,7 +10,13 @@ export class Project {
 
   failed(): Test[] {
     return this.tests.filter(test => {
-      test.data
+      return test.lastRun.status == RunStatus.FAILED
+    })
+  }
+
+  running(): Test[] {
+    return this.tests.filter(test => {
+      return test.lastRun.status == RunStatus.QUEUED || test.lastRun.status == RunStatus.STARTED
     })
   }
 }

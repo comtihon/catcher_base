@@ -36,7 +36,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
+  ngOnInit() {  // TODO currentUser is updated after this page is rendered. Need to subscribe to user service.
     this.projectService.loadNotifications()
       .subscribe(() => {
         this.notifications = this.projectService.notificationsValue;
