@@ -28,6 +28,11 @@ export class UserService {
   // current is optional user, returned from login (has only token information)
   // this function will fill the rest
   loadCurrentUser(current?: User) {
+    if(!this.currentUserValue) {
+      // set current user to enable jwt for interceptor
+      this.currentUserSubject.next(current);
+    }
+
     return this.http.get<any>(`/api/v1/user`)
       .subscribe(gotUser => {
         if(current) {

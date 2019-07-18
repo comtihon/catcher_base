@@ -62,28 +62,14 @@ CREATE TABLE tests
   project_id integer REFERENCES projects (id)
 );
 
-CREATE TABLE projects_tests
-(
-  project_id integer REFERENCES projects (id),
-  tests_id  integer REFERENCES tests (id),
-  CONSTRAINT pk_projects_tests PRIMARY KEY (project_id, tests_id)
-);
-
-CREATE TYPE run_status AS ENUM
-(
- 'QUEUED',
- 'STARTED',
- 'FAILED',
- 'FINISHED',
- 'ABORTED'
-);
-
 CREATE TABLE runs
 (
   id SERIAL PRIMARY KEY,
   test_id integer REFERENCES tests (id),
-  status run_status not null,
+  status varchar(12) not null,
   started TIMESTAMP not null,
   finished TIMESTAMP,
   output text
 );
+
+CREATE SEQUENCE hibernate_sequence START 1;

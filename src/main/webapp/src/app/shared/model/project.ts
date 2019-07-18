@@ -5,5 +5,11 @@ export class Project {
   name: string;
   remotePath: string;
   localPath: string;
-  tests: Test[] = []
+  tests: Test[] = [];
+
+  failed(): Test[] {
+    return this.tests.filter(test => {
+      test.data
+    })
+  }
 }

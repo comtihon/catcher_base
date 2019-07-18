@@ -17,9 +17,4 @@ export class AppComponent {
   ) {
     this.userService.currentUser.subscribe(x => this.currentUser = x);
   }
-
-  logout() {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
-  }
 }

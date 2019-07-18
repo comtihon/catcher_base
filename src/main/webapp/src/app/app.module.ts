@@ -21,15 +21,14 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 @NgModule({
   declarations: [
     AppComponent,
+    AlertComponent,
+    LoginComponent,
+    RegisterComponent,
     NavbarComponent,
     SidebarComponent,
     FooterComponent,
     DashboardComponent,
-    LoginComponent,
-    AlertComponent,
-    HomeComponent,
-    RegisterComponent,
-    NavbarComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,

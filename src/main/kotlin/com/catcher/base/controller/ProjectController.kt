@@ -4,29 +4,37 @@ import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.dto.TestDTO
 import com.catcher.base.service.project.ProjectService
+import com.catcher.base.service.team.TeamService
 import com.catcher.base.service.test.TestService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.security.Principal
 import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/v1/project")
 class ProjectController(@Autowired val projectService: ProjectService,
+                        @Autowired val teamService: TeamService,
                         @Autowired val testService: TestService) {
 
+    /**
+     * Create or update project
+     * Add current authenticated user to all project's teams
+     */
     @PostMapping
-    fun new(@RequestBody project: ProjectDTO): ProjectDTO {
-        return projectService.newProject(project)
+    fun new(@RequestBody project: ProjectDTO, principal: Principal): ProjectDTO {
+        val created =  projectService.newProject(project)
+        teamService.addUserToTeams(principal.name, created.teams)
+        return created
     }
 
     @GetMapping
-    fun listAll(): List<ProjectDTO> {
-        return projectService.getAllForUser()
+    fun listAll(principal: Principal): List<ProjectDTO> {
+        return projectService.getAllLimitedForNonAdmin(principal.name)
     }
 
     @GetMapping("/{id}")
     fun get(@PathVariable id: Int): ProjectDTO { // TODO async query?
-        // TODO test projects.teams.projects recursion
         return projectService.findById(id)
     }
 

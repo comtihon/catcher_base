@@ -2,6 +2,7 @@ package com.catcher.base
 
 import com.catcher.base.data.dao.User
 import com.catcher.base.data.dto.ProjectDTO
+import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
 import org.junit.*
@@ -32,10 +33,10 @@ import java.time.Duration
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 abstract class IntegrationTest {
 
-    @Value("\${security.oauth2.client.client-id}")
+    @Value("\${spring.security.oauth2.client.client-id}")
     val clientId: String? = null
 
-    @Value("\${security.oauth2.client.client-secret}")
+    @Value("\${spring.security.oauth2.client.client-secret}")
     val secret: String? = null
 
     @Autowired
@@ -97,6 +98,7 @@ abstract class IntegrationTest {
                     "spring.datasource.url=jdbc:postgresql://${IntegrationTest.postgres.containerIpAddress}:${IntegrationTest.postgres.getMappedPort(5432)}/catcher?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true"
 
             ).applyTo(configurableApplicationContext.environment)
+            println(configurableApplicationContext.environment)
         }
     }
 
@@ -125,10 +127,11 @@ abstract class IntegrationTest {
         return template.exchange(uri.build().toUri(), method, HttpEntity(body, headers), responseType)
     }
 
-    protected fun newProjectDTO(name: String, localPath: String? = null) =
+    protected fun newProjectDTO(name: String, localPath: String? = null, teams: List<TeamDTO> = emptyList()) =
             ProjectDTO(null,
                     name,
                     null,
                     localPath,
+                    teams,
                     emptyList())
 }

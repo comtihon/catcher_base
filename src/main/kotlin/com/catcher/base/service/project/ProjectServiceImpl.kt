@@ -5,10 +5,9 @@ import com.catcher.base.data.dao.Team
 import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.repository.ProjectRepository
-import com.catcher.base.data.repository.TeamRepository
+import com.catcher.base.data.repository.UserRepository
 import com.catcher.base.exception.ProjectNotFoundException
-import com.catcher.base.exception.TeamNotFoundException
-import org.slf4j.LoggerFactory
+import com.catcher.base.service.team.TeamService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.repository.findByIdOrNull
@@ -23,10 +22,9 @@ import javax.annotation.PostConstruct
 // TODO Async
 @Service
 class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
-                         @Autowired val teamRepository: TeamRepository,
+                         @Autowired val userRepository: UserRepository,
+                         @Autowired val teamService: TeamService,
                          @Autowired val scanner: ProjectScanner) : ProjectService {
-
-    private val log = LoggerFactory.getLogger(this::class.java)
 
     @Value("\${catcher.base.local_dir}")
     private val localDir: String? = null
@@ -40,28 +38,37 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
         projectRepo.deleteById(projectId)
     }
 
+    /**
+     * Create new project or update existing.
+     * Replace project's teams (create them if not created).
+     */
     @Transactional
     override fun newProject(projectDto: ProjectDTO): ProjectDTO {
         var existing = projectRepo.findProjectByName(projectDto.name)
         val isNew =
                 if (existing == null) { // new project - create directories
-                    createNewProject(projectDto)
+                    projectDto.localPath = ensureDirectories(projectDto)
                     existing = projectDto.toDAO()
                     true
-                } else { // update existing project
+                } else { // update existing project (local path can't be updated) TODO allow?
                     existing.apply {
                         this.remotePath = projectDto.remotePath ?: ""
                         this.name = projectDto.name
                     }
                     false
                 }
+        replaceProjectTeams(existing, projectDto.teams)
         val saved = projectRepo.save(existing)
         scanner.scanProject(saved, isNew) // index project & all it's tests.
         return saved.toDTO()
     }
 
-    override fun getAllForUser(): List<ProjectDTO> {
-        return projectRepo.getAllForCurrentUser().map { it.toDTO() }
+    override fun getAllLimitedForNonAdmin(email: String): List<ProjectDTO> {
+        val user = userRepository.findByIdOrNull(email)!!
+        return if (user.role.name == "admin")
+            projectRepo.findAll().map { it.toDTO() }
+        else
+            projectRepo.getAllForCurrentUser().map { it.toDTO() }
     }
 
     override fun findById(projectId: Int): ProjectDTO {
@@ -70,16 +77,21 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
 
     @Transactional
     override fun addTeamToProject(projectId: Int, teamDto: TeamDTO) {
-        val team: Team = teamRepository.findById(teamDto.name).orElseThrow { throw TeamNotFoundException() }
         val project: Project = projectRepo.findById(projectId).orElseThrow { throw ProjectNotFoundException() }
+        val team: Team = teamService.ensureTeam(teamDto)
         project.teams.add(team)
     }
 
     @Transactional
     override fun removeTeamFromProject(projectId: Int, teamDto: TeamDTO) {
-        val team: Team = teamRepository.findById(teamDto.name).orElseThrow { throw TeamNotFoundException() }
         val project: Project = projectRepo.findById(projectId).orElseThrow { throw ProjectNotFoundException() }
+        val team: Team = teamService.ensureTeam(teamDto)
         project.teams.remove(team)
+    }
+
+    private fun replaceProjectTeams(project: Project, teamDTOs: List<TeamDTO>) {
+        val teams = teamDTOs.map { teamService.ensureTeam(it) }
+        project.teams = teams.toMutableSet()
     }
 
     /**
@@ -96,7 +108,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
             val name = it.fileName.toString()
             var existing = projectRepo.findProjectByName(name)
             if (existing == null) { // new project - only index project as we have no information about remote
-                existing = ProjectDTO(0, name, null, it.toString(), emptyList()).toDAO()
+                existing = ProjectDTO(0, name, null, it.toString(), emptyList(), emptyList()).toDAO()
                 projectRepo.save(existing)
                 scanner.indexProject(existing)
             } else { // existing project
@@ -109,15 +121,14 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
     /**
      * Creates directory tree for a new project
      */
-    private fun createNewProject(projectDto: ProjectDTO) {
-        if (projectDto.localPath == null || projectDto.localPath!!.isBlank()) {
+    private fun ensureDirectories(projectDto: ProjectDTO): String {
+        var localPath: String? = projectDto.localPath
+        if (localPath == null || localPath.isBlank()) {
             // no custom local dir - use catcher's project's dir
-            projectDto.localPath = projectDir().toAbsolutePath().resolve(Paths.get(projectDto.name)).toString()
+            localPath = projectDir().toAbsolutePath().resolve(Paths.get(projectDto.name)).toString()
         }
-        with(projectDto) {
-            Paths.get(localPath, ProjectScanner.TEST_DIR).toFile().mkdirs()
-            Paths.get(localPath, ProjectScanner.STEPS_DIR).toFile().mkdirs()
-            Paths.get(localPath, ProjectScanner.RES_DIR).toFile().mkdirs()
-        }
+        listOf(ProjectScanner.TEST_DIR, ProjectScanner.STEPS_DIR, ProjectScanner.RES_DIR)
+                .forEach { Paths.get(localPath, it).toFile().mkdirs() }
+        return localPath
     }
 }

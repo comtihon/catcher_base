@@ -81,8 +81,8 @@ class TeamControllerTest : IntegrationTest() {
         val user = userRepository.save(User(email = "first@test.de", name = "first",
                 phash = passwordEncoder.encode(userPass), lastLogin = null,
                 role = roleRepository.findByName("user")!!, teams = emptySet()))
-        teamService.addUserToTeam(first.name, user.toDTO())
-        teamService.addUserToTeam(second.name, user.toDTO())
+        teamService.addUserToTeam(first.name, user.email)
+        teamService.addUserToTeam(second.name, user.email)
 
         val userToken = getToken(user.email, userPass)
         val res = getWithToken("/api/v1/team/${first.name}", userToken, TeamDTO::class.java)
@@ -109,8 +109,8 @@ class TeamControllerTest : IntegrationTest() {
         val user = userRepository.save(User(email = "first@test.de", name = "first",
                 phash = passwordEncoder.encode(userPass), lastLogin = null,
                 role = roleRepository.findByName("user")!!, teams = emptySet()))
-        teamService.addUserToTeam(team1.name, user.toDTO())
-        teamService.addUserToTeam(team2.name, user.toDTO())
+        teamService.addUserToTeam(team1.name, user.email)
+        teamService.addUserToTeam(team2.name, user.email)
 
         val delRes = getToken(adminEmail, adminPass).run {
             delWithToken("/api/v1/team/${team1.name}", this, String::class.java)

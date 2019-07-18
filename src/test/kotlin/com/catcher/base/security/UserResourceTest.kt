@@ -31,11 +31,11 @@ class UserResourceTest : FunctionalTest() {
         val project2 = projectService.newProject(newProjectDTO("test_project2"))
 
         val team1 = TeamDTO("test_team1", emptyList())
-        teamService.newTeam(team1)
-        teamService.addUserToTeam(team1.name, UserDTO(userEmail, null, null, null))
+        teamService.upsertTeam(team1)
+        teamService.addUserToTeam(team1.name, userEmail)
 
         val team2 = TeamDTO("test_team2", emptyList())
-        teamService.newTeam(team2)
+        teamService.upsertTeam(team2)
 
         projectService.addTeamToProject(project1.projectId!!, team1)
         projectService.addTeamToProject(project2.projectId!!, team2)
@@ -58,8 +58,8 @@ class UserResourceTest : FunctionalTest() {
         teamRepository.save(Team("third", mutableSetOf(), mutableSetOf()))
         teamRepository.save(Team("fourth", mutableSetOf(), mutableSetOf()))
         val user = UserDTO(userEmail, null, null, null)
-        teamService.addUserToTeam(first.name, user)
-        teamService.addUserToTeam(second.name, user)
+        teamService.addUserToTeam(first.name, user.email)
+        teamService.addUserToTeam(second.name, user.email)
         val resultUser = getToken(userEmail, userPass).run {
             getWithToken("/api/v1/team/my", this, List::class.java)
         }
