@@ -17,6 +17,7 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {FooterComponent} from "./components/footer.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
+import {ChartsModule} from "ng2-charts";
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},
