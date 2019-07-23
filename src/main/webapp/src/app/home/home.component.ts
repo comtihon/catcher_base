@@ -5,7 +5,9 @@ import {SystemInfo} from "../shared/model/systemInfo";
 import {UserService} from "../shared/services/user.service";
 import {Label, MultiDataSet} from "ng2-charts";
 import {ChartType} from "chart.js";
-import {Observable} from "rxjs";
+import {ProjectService} from "../shared/services/project.service";
+import {TeamService} from "../shared/services/team.service";
+import {RoleService} from "../shared/services/role.service";
 
 
 @Component({
@@ -15,7 +17,7 @@ import {Observable} from "rxjs";
   encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
-  currentUser: Observable<User>;
+  currentUser: User;
   systemInfo: SystemInfo;
 
   public chartLabels: Label[] = ['Passed', 'Failed', 'Running', 'Aborted'];
@@ -33,11 +35,16 @@ export class HomeComponent implements OnInit {
       ]
     }
   ];
+  // TODO set empty true only after loading finished.
+  public emptyStatistics: boolean = true;
 
   constructor(private userService: UserService,
-              private systemService: SystemService) {
-    this.currentUser = this.userService.currentUser;
-    this.systemInfo = this.systemService.systemInfoValue
+              private systemService: SystemService,
+              private projectService: ProjectService,
+              private teamService: TeamService,
+              private roleService: RoleService) {
+    this.currentUser = this.userService.currentUserValue;
+    this.systemInfo = this.systemService.systemInfoValue;
   }
 
   ngOnInit() {
@@ -46,7 +53,15 @@ export class HomeComponent implements OnInit {
         this.systemInfo = this.systemService.systemInfoValue;
       }, error => {
         // TODO handle error
-      })
+      });
+    this.projectService.loadProjects()
+      .subscribe(() => {
+        let statistics = this.projectService.gatherStatistics();
+        this.emptyStatistics = statistics.reduce((a, b) => a + b, 0) == 0;
+        this.chartDatasets = [statistics]
+      });
+    this.roleService.loadRoles();
+    this.teamService.loadTeams();
   }
 
   public chartClicked(e: any): void {

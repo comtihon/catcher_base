@@ -8,4 +8,4 @@ data class UserDTO(@ValidEmail @NotEmpty @NotNull
                    val email: String,
                    val password: String?,
                    val name: String?,
-                   val role: String?)
+                   val role: RoleDTO?)

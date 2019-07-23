@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-md-6 d-flex align-items-stretch grid-margin">
+    <div class="row flex-grow">
+      <div class="col-12 grid-margin">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">New project</h4>
+            <form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()">
+              <div class="form-group">
+                <label for="projectName">Project Name</label>
+                <input type="text" class="form-control" id="projectName" placeholder="Name">
+                <div *ngIf="submitted && f.projectName.errors" class="invalid-feedback">
+                  <div *ngIf="f.projectName.errors.required">ProjectName is required</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="localPath">Local path (optional)</label>
+                <input type="text" class="form-control" id="localPath" placeholder="./">
+              </div>
+              <!--              TODO github integration -->
+              <div class="form-group">
+                <label for="remotePath">Remote path (optional)</label>
+                <input type="text" class="form-control" id="remotePath" placeholder="https://github.com/...">
+              </div>
+
+              <div class="form-group">
+                <label for="teams">Teams</label>
+                <tag-input [ngModel]="teamsModel" [modelAsStrings]="true" [ngModelOptions]="{standalone: true}">
+                  <tag-input-dropdown [autocompleteItems]="teams">
+                  </tag-input-dropdown>
+                </tag-input>
+              </div>
+
+              <div class="form-group">
+                <button [disabled]="waiting" class="btn btn-primary">
+                  <span *ngIf="waiting" class="spinner-border spinner-border-sm mr-1"></span>
+                  Create
+                </button>
+<!--                TODO go back -->
+                <button class="btn btn-light">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

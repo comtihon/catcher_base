@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-body">
         <h5 class="card-title mb-4">Tests overview</h5>
-        <div style="display: block">
+        <div *ngIf="!emptyStatistics" style="display: block">
           <canvas baseChart
                   [chartType]="chartType"
                   [data]="chartDatasets"
@@ -13,6 +13,13 @@
                   (chartClick)="chartClicked($event)">
           </canvas>
         </div>
+        <div *ngIf="emptyStatistics" style="display: block">
+          <h4 class="card-title">No projects found</h4>
+          <p class="card-description">There are no projects, but you can create one.</p>
+<!--          TODO for admin only -->
+          <a routerLink="/new_project" class="btn btn-success">New project</a>
+        </div>
+<!--        TODO show spinner when fetching the info -->
       </div>
     </div>
   </div>
@@ -34,8 +41,9 @@
             <p *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
           </div>
           <div class="side-right">
-            <!--            TODO visible only for admin -->
-            <button type="button" class="btn btn-primary btn-rounded btn-fw">update</button>
+            <button *ngIf="currentUser.isAdmin" type="button" class="btn btn-primary btn-rounded btn-fw">
+              update
+            </button>
           </div>
         </div>
         <div class="wrapper d-flex justify-content-between">

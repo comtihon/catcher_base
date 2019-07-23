@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {BehaviorSubject, Observable} from "rxjs";
 import {Notification} from "../model/notification";
-import {Project} from "../model/project";
+import {OverallStatistics, Project} from "../model/project";
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +49,19 @@ export class ProjectService {
         this.projectsSubject.next(data);
         return data;
       }))
+  }
+
+  gatherStatistics(): number[] {
+    let statistics = new OverallStatistics();
+    for (let project of this.projectsValue) {
+      let aborted = project.aborted().length;
+      let running = project.running().length;
+      let failed = project.failed().length;
+      statistics.aborted += aborted;
+      statistics.running += running;
+      statistics.passed += project.tests.length - aborted - running - failed;
+      statistics.failed += failed;
+    }
+    return statistics.asChartData()
   }
 }

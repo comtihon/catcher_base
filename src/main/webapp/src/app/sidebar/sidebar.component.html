@@ -9,15 +9,15 @@
           <div class="text-wrapper">
             <p class="profile-name">{{ currentUser.name }}</p>
             <div>
-              <small class="designation text-muted">{{ currentUser.role }}</small>
+              <small class="designation text-muted">{{ currentUser.role.name }}</small>
               <span class="status-indicator online"></span>
             </div>
           </div>
         </div>
         <!-- TODO disable button for non-admin users -->
-        <button class="btn btn-success btn-block">New Project
+        <a routerLink="/new_project" class="btn btn-success btn-block">New project
           <i class="mdi mdi-plus"></i>
-        </button>
+        </a>
       </div>
     </li>
     <li class="nav-item">

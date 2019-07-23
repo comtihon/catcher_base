@@ -18,10 +18,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projectService.loadProjects()
-      .subscribe(() => {
-        this.projects = this.projectService.projectsValue;
-      })
   }
 
 }

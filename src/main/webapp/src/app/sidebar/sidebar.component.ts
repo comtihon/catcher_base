@@ -8,7 +8,6 @@ import {UserService} from "../shared/services/user.service";
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  public samplePagesCollapsed = true;
   currentUser: User;
 
   constructor(private userService: UserService) {

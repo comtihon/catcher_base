@@ -35,7 +35,7 @@ class UserServiceImpl(@Autowired val userRepository: UserRepository,
                 phash = passwordEncoder.encode(user.password.orEmpty()),
                 teams = emptySet(),
                 lastLogin = null,
-                role = roleRepository.findByName(user.role ?: "user")!!)
+                role = roleRepository.findByName(user.role?.name ?: "user")!!)
         userRepository.save(userDao)
         return userDao.toDTO()
     }

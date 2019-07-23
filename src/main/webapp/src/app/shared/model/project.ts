@@ -8,6 +8,7 @@ export class Project {
   localPath: string;
   tests: Test[] = [];
 
+  // TODO iterate tests only once
   failed(): Test[] {
     return this.tests.filter(test => {
       return test.lastRun.status == RunStatus.FAILED
@@ -18,5 +19,22 @@ export class Project {
     return this.tests.filter(test => {
       return test.lastRun.status == RunStatus.QUEUED || test.lastRun.status == RunStatus.STARTED
     })
+  }
+
+  aborted(): Test[] {
+    return this.tests.filter(test => {
+      return test.lastRun.status == RunStatus.ABORTED
+    })
+  }
+}
+
+export class OverallStatistics {
+  passed: number = 0;
+  failed: number = 0;
+  running: number = 0;
+  aborted: number = 0;
+
+  asChartData(): number[] {
+    return [this.passed, this.failed, this.running, this.aborted]
   }
 }
