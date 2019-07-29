@@ -1,5 +1,6 @@
 import {Test} from "./test";
 import {RunStatus} from "./test";
+import {Team} from "./team";
 
 export class Project {
   projectId: number;
@@ -7,6 +8,7 @@ export class Project {
   remotePath: string;
   localPath: string;
   tests: Test[] = [];
+  teams: Team[] = [];
 
   // TODO iterate tests only once
   failed(): Test[] {
@@ -24,6 +26,13 @@ export class Project {
   aborted(): Test[] {
     return this.tests.filter(test => {
       return test.lastRun.status == RunStatus.ABORTED
+    })
+  }
+
+  // TODO use local counters instead of filtering every time
+  passed(): Test[] {
+    return this.tests.filter(test => {
+      return test.lastRun.status == RunStatus.FINISHED
     })
   }
 }

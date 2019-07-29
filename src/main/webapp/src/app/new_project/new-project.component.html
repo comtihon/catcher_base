@@ -8,25 +8,30 @@
             <form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()">
               <div class="form-group">
                 <label for="projectName">Project Name</label>
-                <input type="text" class="form-control" id="projectName" placeholder="Name">
-                <div *ngIf="submitted && f.projectName.errors" class="invalid-feedback">
-                  <div *ngIf="f.projectName.errors.required">ProjectName is required</div>
+                <input type="text" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                       formControlName="name" placeholder="Name">
+                <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                  <div *ngIf="f.name.errors.required">ProjectName is required</div>
                 </div>
               </div>
               <div class="form-group">
                 <label for="localPath">Local path (optional)</label>
-                <input type="text" class="form-control" id="localPath" placeholder="./">
+                <input type="text" formControlName="localPath" class="form-control" id="localPath" placeholder="./">
               </div>
               <!--              TODO github integration -->
               <div class="form-group">
                 <label for="remotePath">Remote path (optional)</label>
-                <input type="text" class="form-control" id="remotePath" placeholder="https://github.com/...">
+                <input type="text" formControlName="remotePath" class="form-control" id="remotePath" placeholder="https://github.com/...">
               </div>
 
               <div class="form-group">
                 <label for="teams">Teams</label>
-                <tag-input [ngModel]="teamsModel" [modelAsStrings]="true" [ngModelOptions]="{standalone: true}">
+                <tag-input [ngModel]=""
+                           [modelAsStrings]="true"
+                           [editable]="true"
+                           formControlName="teams">
                   <tag-input-dropdown [autocompleteItems]="teams">
+<!--                    TODO autocomplete observable? -->
                   </tag-input-dropdown>
                 </tag-input>
               </div>
@@ -36,7 +41,7 @@
                   <span *ngIf="waiting" class="spinner-border spinner-border-sm mr-1"></span>
                   Create
                 </button>
-<!--                TODO go back -->
+                <!--                TODO go back -->
                 <button class="btn btn-light">Cancel</button>
               </div>
             </form>

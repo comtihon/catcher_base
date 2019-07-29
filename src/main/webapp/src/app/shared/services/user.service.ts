@@ -39,6 +39,8 @@ export class UserService {
           gotUser.access_token = current.access_token;
           gotUser.refresh_token = current.refresh_token;
         }
+        // TODO do I need localStorage?
+        // TODO plainToClass for user
         localStorage.setItem('currentUser', JSON.stringify(gotUser));
         this.currentUserSubject.next(gotUser);
         return gotUser;

@@ -8,6 +8,13 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Scope
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import java.util.concurrent.Executor
+import org.springframework.core.Ordered
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
+import org.springframework.boot.web.servlet.ServletRegistrationBean
+
+
+
+
 
 
 @Configuration

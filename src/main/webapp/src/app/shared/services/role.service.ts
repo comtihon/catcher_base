@@ -23,6 +23,7 @@ export class RoleService {
   loadRoles() {
     return this.http.get<any>(`/api/v1/team`)
       .subscribe(teams => {
+        // TODO plainToClass
         this.rolesSubject.next(teams);
         return teams;
       }) // TODO error?

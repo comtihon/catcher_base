@@ -5,6 +5,7 @@ import {map} from "rxjs/operators";
 import {BehaviorSubject, Observable} from "rxjs";
 import {Notification} from "../model/notification";
 import {OverallStatistics, Project} from "../model/project";
+import {plainToClass} from "class-transformer";
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +39,7 @@ export class ProjectService {
     // TODO implement me
     return this.http.get<any>('/api/v1/system')
       .pipe(map(data => {
+        //let notifications = data.map(notification => plainToClass(Notification, notification));
         this.notificationsSubject.next(new Notification());
         return new Notification();
       }))
@@ -46,8 +48,9 @@ export class ProjectService {
   loadProjects() {
     return this.http.get<any>('/api/v1/project')
       .pipe(map(data => {
-        this.projectsSubject.next(data);
-        return data;
+        let projects = data.map(project => plainToClass(Project, project));
+        this.projectsSubject.next(projects);
+        return projects;
       }))
   }
 
@@ -63,5 +66,13 @@ export class ProjectService {
       statistics.failed += failed;
     }
     return statistics.asChartData()
+  }
+
+  newProject(project: Project) {
+    return this.http.post<any>('/api/v1/project', project)
+      .pipe(map(data => {
+        this.loadProjects().subscribe();
+        return data;
+      }))
   }
 }
