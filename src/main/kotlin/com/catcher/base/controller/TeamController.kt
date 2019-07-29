@@ -6,7 +6,6 @@ import com.catcher.base.exception.TeamNotFoundException
 import com.catcher.base.service.team.TeamService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import java.lang.Exception
 import javax.validation.Valid
 
 @RestController
@@ -15,7 +14,7 @@ class TeamController(@Autowired val teamService: TeamService) {
 
     @PostMapping
     fun new(@Valid @RequestBody team: TeamDTO): TeamDTO {
-        return teamService.newTeam(team)
+        return teamService.upsertTeam(team)
     }
 
     @GetMapping
@@ -37,7 +36,7 @@ class TeamController(@Autowired val teamService: TeamService) {
 
     @PutMapping("/{name}/add_user")
     fun addUser(@PathVariable name: String, @Valid @RequestBody user: UserDTO) {
-        teamService.addUserToTeam(name, user)
+        teamService.addUserToTeam(name, user.email)
     }
 
     @PutMapping("/{name}/del_user")

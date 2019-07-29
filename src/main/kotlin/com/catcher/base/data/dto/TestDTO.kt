@@ -7,4 +7,5 @@ data class TestDTO(val id: Int?,
                    @NotEmpty @NotNull
                    val name: String,
                    var path: String?,
-                   var data: String?)
+                   var data: String?,
+                   var lastRun: TestRunDTO?)

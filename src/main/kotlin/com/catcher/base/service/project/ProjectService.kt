@@ -6,7 +6,11 @@ import com.catcher.base.data.dto.TeamDTO
 interface ProjectService {
     fun newProject(projectDto: ProjectDTO): ProjectDTO
 
-    fun getAllForUser(): List<ProjectDTO>
+    /**
+     * If current user's role is admin - return all available projects
+     * otherwise return only projects, whose teams has this user in.
+     */
+    fun getAllLimitedForNonAdmin(email: String): List<ProjectDTO>
 
     fun findById(projectId: Int): ProjectDTO
 

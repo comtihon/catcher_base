@@ -10,11 +10,11 @@ data class Project(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    var name: String,
                    val localPath: String,
                    var remotePath: String?,
-                   @ManyToMany(cascade = [CascadeType.PERSIST])
-                   val teams: MutableSet<Team>,
-                   @OneToMany(cascade = [CascadeType.REMOVE])
+                   @ManyToMany
+                   var teams: MutableSet<Team>,
+                   @OneToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER, mappedBy = "project")
                    val tests: MutableSet<Test>) {
-    fun toDTO() = ProjectDTO(id, name, remotePath, localPath, tests.map(Test::toDTO))
+    fun toDTO() = ProjectDTO(id, name, remotePath, localPath, teams.map(Team::toDTO), tests.map(Test::toDTO))
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

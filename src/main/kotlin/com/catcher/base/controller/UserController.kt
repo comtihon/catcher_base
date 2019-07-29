@@ -18,11 +18,11 @@ class UserController(@Autowired val userService: UserService) {
     fun new(@Valid @RequestBody user: UserDTO): UserDTO {
         if (user.password.isNullOrEmpty())
             throw PasswordRequiredException("Password required")
-        return userService.registerUser(user).toDTO()
+        return userService.registerUser(user)
     }
 
     @GetMapping
-    fun user(principal: Principal): Principal {
-        return principal
+    fun user(principal: Principal): UserDTO {
+        return userService.findByEmail(principal.name)
     }
 }

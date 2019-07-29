@@ -4,14 +4,17 @@ import {LoginComponent} from "./login/login.component";
 import {AuthGuard} from "./shared/guards/auth.guard";
 import {HomeComponent} from "./home/home.component";
 import {RegisterComponent} from "./register/register.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
+import {NewProjectComponent} from "./new_project/new-project.component";
 
 
 const routes: Routes = [
   {path: '', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'projects', component: DashboardComponent, canActivate: [AuthGuard]},
+  {path: 'new_project', component: NewProjectComponent, canActivate: [AuthGuard]},
 
-  // otherwise redirect to home
   {path: '**', redirectTo: ''}
 ];
 

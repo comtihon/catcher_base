@@ -64,6 +64,7 @@ class ProjectScanner(@Autowired val testRepository: TestRepository,
                                     it.fileName.toString(),
                                     it.toString(),
                                     mutableSetOf(),
+                                    null,
                                     project))
                 }
                 .forEach { project.tests.add(it) }

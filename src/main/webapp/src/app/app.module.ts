@@ -10,24 +10,39 @@ import {JwtInterceptor} from "./shared/interceptor/jwt.interceptor";
 import {ErrorInterceptor} from "./shared/interceptor/error.interceptor";
 import {AlertComponent} from "./components/alert.component";
 import {HomeComponent} from "./home/home.component";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { RegisterComponent } from './register/register.component';
+import {RegisterComponent} from './register/register.component';
+import {NavbarComponent} from "./navbar/navbar.component";
+import {SidebarComponent} from "./sidebar/sidebar.component";
+import {FooterComponent} from "./components/footer.component";
+import {DashboardComponent} from "./dashboard/dashboard.component";
+import {ChartsModule} from "ng2-charts";
+import {NewProjectComponent} from "./new_project/new-project.component";
+import {TagInputModule} from "ngx-chips";
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
     AlertComponent,
+    LoginComponent,
+    RegisterComponent,
+    NavbarComponent,
+    SidebarComponent,
+    FooterComponent,
+    DashboardComponent,
     HomeComponent,
-    RegisterComponent
+    NewProjectComponent
   ],
   imports: [
+    TagInputModule,
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ChartsModule,
+    FormsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

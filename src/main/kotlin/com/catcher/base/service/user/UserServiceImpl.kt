@@ -5,6 +5,7 @@ import com.catcher.base.data.dto.UserDTO
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository
 import com.catcher.base.exception.EmailExistsException
+import com.catcher.base.exception.UserNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -16,7 +17,6 @@ import javax.annotation.PostConstruct
 class UserServiceImpl(@Autowired val userRepository: UserRepository,
                       @Autowired val passwordEncoder: PasswordEncoder,
                       @Autowired val roleRepository: RoleRepository) : UserService {
-
     private val log = LoggerFactory.getLogger(this::class.java)
 
     @Value("#{environment.ADMIN_USER}")
@@ -25,7 +25,7 @@ class UserServiceImpl(@Autowired val userRepository: UserRepository,
     @Value("#{environment.ADMIN_PASS}")
     private val adminPass: String? = null
 
-    override fun registerUser(user: UserDTO): User {
+    override fun registerUser(user: UserDTO): UserDTO {
         val existing: User? = userRepository.findById(user.email).orElse(null)
         if (existing != null)
             throw EmailExistsException("User with name %s exists".format(user.email))
@@ -35,9 +35,15 @@ class UserServiceImpl(@Autowired val userRepository: UserRepository,
                 phash = passwordEncoder.encode(user.password.orEmpty()),
                 teams = emptySet(),
                 lastLogin = null,
-                role = roleRepository.findByName(user.role ?: "user")!!)
+                role = roleRepository.findByName(user.role?.name ?: "user")!!)
         userRepository.save(userDao)
-        return userDao
+        return userDao.toDTO()
+    }
+
+    override fun findByEmail(email: String): UserDTO {
+        return userRepository.findById(email)
+                .orElseThrow { throw UserNotFoundException() }
+                .toDTO()
     }
 
     @PostConstruct

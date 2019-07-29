@@ -140,6 +140,7 @@ internal class TestServiceTest : FunctionalTest() {
                 name,
                 Paths.get(testDir, name).toString(),
                 mutableSetOf(),
+                null,
                 project))
     }
 
