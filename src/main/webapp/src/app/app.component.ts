@@ -15,6 +15,6 @@ export class AppComponent {
     private authenticationService: AuthService,
     private userService: UserService
   ) {
-    this.userService.currentUser.subscribe(x => this.currentUser = x);
+    this.userService.currentUser.subscribe(x => this.currentUser = x); // TODO ?
   }
 }

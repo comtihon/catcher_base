@@ -32,6 +32,7 @@ export class NewProjectComponent implements OnInit {
   ngOnInit() {
     this.newProjectForm = this.formBuilder.group({
       name: ['', Validators.required],
+      description: [],
       remotePath: [],
       localPath: [],
       tests: [[]],

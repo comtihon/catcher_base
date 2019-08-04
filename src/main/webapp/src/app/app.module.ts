@@ -20,6 +20,7 @@ import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ChartsModule} from "ng2-charts";
 import {NewProjectComponent} from "./new_project/new-project.component";
 import {TagInputModule} from "ngx-chips";
+import {ProjectComponent} from './project/project.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import {TagInputModule} from "ngx-chips";
     FooterComponent,
     DashboardComponent,
     HomeComponent,
-    NewProjectComponent
+    NewProjectComponent,
+    ProjectComponent
   ],
   imports: [
     TagInputModule,

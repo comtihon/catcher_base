@@ -106,12 +106,7 @@ abstract class FunctionalTest {
     }
 
 
-    protected fun newProjectDTO(name: String, localPath: String? = null) = ProjectDTO(0,
-            name,
-            null,
-            localPath,
-            emptyList(),
-            emptyList())
+    protected fun newProjectDTO(name: String, localPath: String? = null) = ProjectDTO(name, localPath)
 
     /**
      * Create project in standalone directory (src/test/resources)
@@ -123,6 +118,7 @@ abstract class FunctionalTest {
         testDir.toFile().mkdirs()
         return Project(0,
                 "testProject",
+                null,
                 projectDir.toString(),
                 null,
                 mutableSetOf(),

@@ -5,6 +5,7 @@ import {Team} from "./team";
 export class Project {
   projectId: number;
   name: string;
+  description: string;
   remotePath: string;
   localPath: string;
   tests: Test[] = [];

@@ -6,6 +6,7 @@ import {HomeComponent} from "./home/home.component";
 import {RegisterComponent} from "./register/register.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {NewProjectComponent} from "./new_project/new-project.component";
+import {ProjectComponent} from "./project/project.component";
 
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'projects', component: DashboardComponent, canActivate: [AuthGuard]},
+  {path: 'project', component: ProjectComponent, canActivate: [AuthGuard]}, // TODO dynamic routes /project/project_name
   {path: 'new_project', component: NewProjectComponent, canActivate: [AuthGuard]},
 
   {path: '**', redirectTo: ''}

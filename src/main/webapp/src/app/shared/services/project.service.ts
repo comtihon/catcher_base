@@ -54,6 +54,11 @@ export class ProjectService {
       }))
   }
 
+  // load project's full info
+  loadProject(projectId: number) {
+    return this.http.get<any>('/api/v1/project/' + projectId)
+  }
+
   gatherStatistics(): number[] {
     let statistics = new OverallStatistics();
     for (let project of this.projectsValue) {
@@ -75,4 +80,5 @@ export class ProjectService {
         return data;
       }))
   }
+
 }

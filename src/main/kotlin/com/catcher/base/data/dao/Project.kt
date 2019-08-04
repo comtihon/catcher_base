@@ -8,13 +8,19 @@ import javax.persistence.*
 data class Project(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                    val id: Int,
                    var name: String,
+                   var description: String?,
                    val localPath: String,
                    var remotePath: String?,
                    @ManyToMany
                    var teams: MutableSet<Team>,
                    @OneToMany(cascade = [CascadeType.REMOVE], fetch = FetchType.EAGER, mappedBy = "project")
                    val tests: MutableSet<Test>) {
-    fun toDTO() = ProjectDTO(id, name, remotePath, localPath, teams.map(Team::toDTO), tests.map(Test::toDTO))
+    fun toDTO() = ProjectDTO(id, name, description, remotePath, localPath, teams.map(Team::toDTO), tests.map(Test::toDTO))
+
+    /**
+     * Includes all runs information for every test
+     */
+    fun toFullDTO() = ProjectDTO(id, name, description, remotePath, localPath, teams.map(Team::toDTO), tests.map(Test::toFullDTO))
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

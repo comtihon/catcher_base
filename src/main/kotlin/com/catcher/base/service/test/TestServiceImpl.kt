@@ -47,7 +47,8 @@ class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
                 test.path!!,
                 mutableSetOf(),
                 null,
-                project))
+                project,
+                null))
         project.tests.add(savedTest)
     }
 
@@ -70,10 +71,10 @@ class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
         testRepository.delete(test)
     }
 
-    override fun contentForTest(testId: Int): TestDTO {
+    override fun contentForTest(testId: Int): TestDTO { // TODO return string instead?
         val test = testRepository.findByIdOrNull(testId) ?: throw FileNotFoundException("No such test")
         val content = Paths.get(test.path).toFile().readText()
-        return TestDTO(test.id, test.name, test.path, content, test.lastRun?.toDTO())
+        return TestDTO(test.id, test.name, test.path, content, test.lastRun?.toDTO(), null, null)
     }
 
     override fun runTest(testId: Int): CompletableFuture<TestRunDTO> {

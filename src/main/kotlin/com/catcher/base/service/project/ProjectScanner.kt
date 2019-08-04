@@ -65,7 +65,8 @@ class ProjectScanner(@Autowired val testRepository: TestRepository,
                                     it.toString(),
                                     mutableSetOf(),
                                     null,
-                                    project))
+                                    project,
+                                    null))
                 }
                 .forEach { project.tests.add(it) }
         // remove old tests

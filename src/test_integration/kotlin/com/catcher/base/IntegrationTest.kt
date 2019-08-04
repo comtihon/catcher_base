@@ -131,6 +131,7 @@ abstract class IntegrationTest {
             ProjectDTO(null,
                     name,
                     null,
+                    null,
                     localPath,
                     teams,
                     emptyList())

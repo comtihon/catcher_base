@@ -3,7 +3,9 @@ export class Test {
   name: string;
   path: string;
   data: string;
-  lastRun: TestRun
+  lastRun: TestRun;
+  updatedAt: string;
+  runs: TestRun[];
 }
 
 export class TestRun {
@@ -11,7 +13,8 @@ export class TestRun {
   status: RunStatus;
   started: string;
   finsihed: string;
-  output: string
+  output: string;
+  test: Test
 }
 
 export enum RunStatus {

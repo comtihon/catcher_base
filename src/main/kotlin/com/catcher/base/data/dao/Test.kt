@@ -2,6 +2,8 @@ package com.catcher.base.data.dao
 
 import com.catcher.base.data.dto.TestDTO
 import org.hibernate.annotations.JoinFormula
+import org.hibernate.annotations.UpdateTimestamp
+import java.time.LocalDateTime
 import javax.persistence.*
 
 @Entity
@@ -21,7 +23,9 @@ data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                         ")")
                 val lastRun: TestRun?,
                 @ManyToOne
-                val project: Project) {
+                val project: Project,
+                @UpdateTimestamp
+                val updatedAt: LocalDateTime?) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -44,7 +48,10 @@ data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         return "Test(id=$id, name='$name', path='$path')"
     }
 
-    fun toDTO(): TestDTO {
-        return TestDTO(id, name, path, null, lastRun?.toDTO())
-    }
+    fun toDTO(): TestDTO = TestDTO(id, name, path, null, lastRun?.toDTO(), updatedAt, null)
+
+    /**
+     * Includes all runs information
+     */
+    fun toFullDTO(): TestDTO = TestDTO(id, name, path, null, lastRun?.toDTO(), updatedAt, runs.map(TestRun::toDTO))
 }

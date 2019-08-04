@@ -1,3 +1,5 @@
 package com.catcher.base.exception
 
-class ExecutionFailedException(msg: String) : RuntimeException(msg)
+open class BusinessException(msg: String) : RuntimeException(msg)
+
+class ExecutionFailedException(msg: String) : BusinessException(msg)

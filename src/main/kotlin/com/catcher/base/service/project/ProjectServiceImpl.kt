@@ -54,6 +54,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
                     existing.apply {
                         this.remotePath = projectDto.remotePath ?: ""
                         this.name = projectDto.name
+                        this.description = projectDto.description
                     }
                     false
                 }
@@ -72,7 +73,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
     }
 
     override fun findById(projectId: Int): ProjectDTO {
-        return projectRepo.findById(projectId).map { it.toDTO() }.orElseThrow(::ProjectNotFoundException)
+        return projectRepo.findByIdWithTests(projectId)?.toFullDTO() ?: throw ProjectNotFoundException()
     }
 
     @Transactional
@@ -108,7 +109,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
             val name = it.fileName.toString()
             var existing = projectRepo.findProjectByName(name)
             if (existing == null) { // new project - only index project as we have no information about remote
-                existing = ProjectDTO(0, name, null, it.toString(), emptyList(), emptyList()).toDAO()
+                existing = ProjectDTO(name, it.toString()).toDAO()
                 projectRepo.save(existing)
                 scanner.indexProject(existing)
             } else { // existing project

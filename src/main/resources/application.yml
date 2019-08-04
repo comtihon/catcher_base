@@ -12,10 +12,10 @@ spring:
   security:
     oauth2:
       client:
-          clientId: catcher
-          clientSecret: catcher_secret
-          scope: read,write
-          autoApproveScopes: '.*'
+        clientId: catcher
+        clientSecret: catcher_secret
+        scope: read,write
+        autoApproveScopes: '.*'
 catcher:
   base:
     local_dir: \${LOCAL_DIR:./}
