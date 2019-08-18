@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from "../shared/model/user";
 import {UserService} from "../shared/services/user.service";
 import {NavigationEnd, Router} from "@angular/router";
 import {Project} from "../shared/model/project";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-sidebar',
@@ -10,13 +10,15 @@ import {Project} from "../shared/model/project";
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent implements OnInit {
-  currentUser: User;
   currentProject: Project;
+  userName: Observable<String>;
+  userRole: Observable<String>;
 
   constructor(private userService: UserService, private router: Router) {
-    this.currentUser = userService.currentUserValue;
+    this.userName = this.userService.currentUser.map(x => x.name);
+    this.userRole = this.userService.currentUser.map(x => x.role? x.role.name : "");
     this.router.events.subscribe(event => {
-      if(event instanceof NavigationEnd && event.url == '/project') {
+      if (event instanceof NavigationEnd && event.url == '/project') {
         this.currentProject = history.state;
       }
     })
@@ -27,5 +29,9 @@ export class SidebarComponent implements OnInit {
 
   onProjectOpen(): boolean {
     return this.router.url === '/project'
+  }
+
+  newTest(): void {
+    this.router.navigate(['/new_test'], {state: this.currentProject});
   }
 }

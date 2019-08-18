@@ -41,7 +41,7 @@
             <p *ngIf="!systemInfo" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
           </div>
           <div class="side-right">
-            <button *ngIf="currentUser.isAdmin" type="button" class="btn btn-primary btn-rounded btn-fw">
+            <button *ngIf="isAdmin | async" type="button" class="btn btn-primary btn-rounded btn-fw">
               update
             </button>
           </div>

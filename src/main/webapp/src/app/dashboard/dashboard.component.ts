@@ -16,6 +16,9 @@ export class DashboardComponent implements OnInit {
 
   constructor(private projectService: ProjectService, public router: Router) {
     this.projects = projectService.projectsValue;
+    if (this.projects.length == 0) { // this form was loaded bypassing home (page refresh)
+      projectService.loadProjects().subscribe(projects => this.projects = projects)
+    }
   }
 
   ngOnInit() {

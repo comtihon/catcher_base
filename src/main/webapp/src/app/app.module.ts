@@ -18,9 +18,13 @@ import {SidebarComponent} from "./sidebar/sidebar.component";
 import {FooterComponent} from "./components/footer.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {ChartsModule} from "ng2-charts";
-import {NewProjectComponent} from "./new_project/new-project.component";
+import {NewProjectComponent} from "./new-project/new-project.component";
 import {TagInputModule} from "ngx-chips";
 import {ProjectComponent} from './project/project.component';
+import {TestComponent} from './test/test.component';
+import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {AceEditorModule} from "ng2-ace-editor";
+
 
 @NgModule({
   declarations: [
@@ -34,7 +38,8 @@ import {ProjectComponent} from './project/project.component';
     DashboardComponent,
     HomeComponent,
     NewProjectComponent,
-    ProjectComponent
+    ProjectComponent,
+    TestComponent
   ],
   imports: [
     TagInputModule,
@@ -44,7 +49,9 @@ import {ProjectComponent} from './project/project.component';
     AppRoutingModule,
     ReactiveFormsModule,
     ChartsModule,
-    FormsModule
+    FormsModule,
+    NgbModule,
+    AceEditorModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true},

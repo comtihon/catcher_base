@@ -8,7 +8,7 @@ export class User {
   refresh_token: string;
 
   isAdmin(): boolean {
-    return this.role.name == 'admin'
+    return this.role? this.role.name == 'admin' : false;
   }
 }
 

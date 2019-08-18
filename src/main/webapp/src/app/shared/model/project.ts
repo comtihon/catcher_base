@@ -8,8 +8,8 @@ export class Project {
   description: string;
   remotePath: string;
   localPath: string;
-  tests: Test[] = [];
-  teams: Team[] = [];
+  tests: Test[];
+  teams: Team[];
 
   // TODO iterate tests only once
   failed(): Test[] {

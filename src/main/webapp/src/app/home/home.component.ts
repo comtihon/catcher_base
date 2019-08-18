@@ -8,6 +8,7 @@ import {ChartType} from "chart.js";
 import {ProjectService} from "../shared/services/project.service";
 import {TeamService} from "../shared/services/team.service";
 import {RoleService} from "../shared/services/role.service";
+import {Observable} from "rxjs";
 
 
 @Component({
@@ -17,8 +18,8 @@ import {RoleService} from "../shared/services/role.service";
   encapsulation: ViewEncapsulation.None
 })
 export class HomeComponent implements OnInit {
-  currentUser: User;
   systemInfo: SystemInfo;
+  isAdmin: Observable<boolean>;
 
   public chartLabels: Label[] = ['Passed', 'Failed', 'Running', 'Aborted'];
   public chartDatasets: MultiDataSet = [
@@ -43,8 +44,8 @@ export class HomeComponent implements OnInit {
               private projectService: ProjectService,
               private teamService: TeamService,
               private roleService: RoleService) {
-    this.currentUser = this.userService.currentUserValue;
-    this.systemInfo = this.systemService.systemInfoValue;
+    this.isAdmin = this.userService.currentUser.map(x => x ? x.isAdmin() : false);
+    this.systemService.systemInfo.subscribe(x => this.systemInfo = x);
   }
 
   ngOnInit() {

@@ -6,6 +6,11 @@ export class Test {
   lastRun: TestRun;
   updatedAt: string;
   runs: TestRun[];
+
+  constructor(name: string, content: string) {
+    this.name = name;
+    this.data = content;
+  }
 }
 
 export class TestRun {

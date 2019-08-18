@@ -7,9 +7,9 @@
             <img src="assets/images/navbar/person.svg" alt="profile image">
           </div>
           <div class="text-wrapper">
-            <p class="profile-name">{{ currentUser.name }}</p>
+            <p class="profile-name">{{ userName | async }}</p>
             <div>
-              <small class="designation text-muted">{{ currentUser.role.name }}</small>
+              <small class="designation text-muted">{{ userRole | async }}</small>
               <span class="status-indicator online"></span>
             </div>
           </div>
@@ -19,7 +19,7 @@
           <i class="mdi mdi-plus"></i>
         </a>
         <!-- TODO check permissions -->
-        <a *ngIf="onProjectOpen()" routerLink="/new_test" class="btn btn-success btn-block">New test
+        <a *ngIf="onProjectOpen()" (click)="newTest()" class="btn btn-success btn-block">New test
           <i class="mdi mdi-plus"></i>
         </a>
       </div>

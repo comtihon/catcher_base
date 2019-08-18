@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
               private authService: AuthService) {
     config.placement = 'bottom-right';
     this.notifications = projectService.notificationsValue;
-    this.currentUser = userService.currentUserValue; // TODO empty user is loaded before real one (async)
+    this.userService.currentUser.subscribe(x => this.currentUser = x);
   }
 
   toggleOffcanvas() {

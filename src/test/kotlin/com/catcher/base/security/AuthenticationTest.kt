@@ -21,7 +21,7 @@ class AuthenticationTest : FunctionalTest() {
     }
 
     /**
-     * Should return token to user with right credentials
+     * Should return token to user with json credentials
      */
     @Test
     fun properCredentialsAuthOK() {

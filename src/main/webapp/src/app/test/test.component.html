@@ -1,0 +1,22 @@
+<div class="btn-group btn-group-toggle">
+  <label class="btn-primary" ngbButtonLabel>
+    <input #yaml type="checkbox" ngbButton [(ngModel)]="model.yaml" (click)="onClick('yaml')"> Yaml
+  </label>
+  <label class="btn-primary" ngbButtonLabel>
+    <input #json type="checkbox" ngbButton [(ngModel)]="model.json" (click)="onClick('json')"> Json
+  </label>
+  <button type="button" class="btn btn-success btn-block" (click)="onSave()">
+    <i class="mdi mdi-cloud-download"></i>Upload
+  </button>
+</div>
+
+<div class="form-group">
+  <div class="input-group">
+    <span class="input-group-addon" id="basic-addon1">@</span>
+    <input #testName type="text" class="form-control" placeholder="Username" aria-label="Test name" aria-describedby="basic-addon1">
+  </div>
+</div>
+
+<ace-editor [(text)]="content" #editor [options]="options" [mode]="mode"
+            [autoUpdateContent]="true" (textChanged)="onChange($event)"
+            style="min-height: 200px; width:100%; overflow: auto;"></ace-editor>
