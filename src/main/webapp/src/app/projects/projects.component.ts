@@ -6,11 +6,11 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['../app.component.scss', './dashboard.component.scss'],
+  templateUrl: './projects.component.html',
+  styleUrls: ['../app.component.scss', './projects.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class DashboardComponent implements OnInit {
+export class ProjectsComponent implements OnInit {
 
   projects: Project[];
 
@@ -25,7 +25,7 @@ export class DashboardComponent implements OnInit {
   }
 
   navigate(project: Project): void {
-    this.router.navigate(['/project'], {state: project});
+    this.router.navigate(['/project'], {state: {project: project}});
   }
 
 }

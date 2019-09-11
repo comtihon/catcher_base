@@ -7,7 +7,6 @@ import javax.validation.constraints.NotNull
 data class TestDTO(val id: Int?,
                    @NotEmpty @NotNull
                    val name: String,
-                   var path: String?,
                    var data: String?,
                    var lastRun: TestRunDTO?,
                    var updatedAt: LocalDateTime?,

@@ -34,7 +34,8 @@
     "compass-mixins": "^0.12.10",
     "class-transformer": "^0.2.3",
     "ng2-ace-editor": "^0.3.9",
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "brace": "^0.11.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.800.0",

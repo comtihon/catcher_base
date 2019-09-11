@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {Project} from "../shared/model/project";
-import {RunStatus, Test, TestRun} from "../shared/model/test";
+import {Test, TestRun} from "../shared/model/test";
 import {ProjectService} from "../shared/services/project.service";
 import {ChartDataSets} from "chart.js";
 import {Color, Label} from "ng2-charts";
 import {AlertService} from "../shared/services/alert.service";
+import {TestService} from "../shared/services/test.service";
 
 @Component({
   selector: 'app-project',
@@ -15,11 +16,11 @@ import {AlertService} from "../shared/services/alert.service";
 export class ProjectComponent implements OnInit {
 
   project: Project;
-  runStatus = RunStatus;
   projectData: ChartDataSets[] = null;
   runDates: Label[] = null;
   chartType = 'line';
   loading = true;
+  teams = [];
 
   public lineChartColors: Color[] = [
     { // passed
@@ -48,21 +49,61 @@ export class ProjectComponent implements OnInit {
     }
   ];
 
-  constructor(public router: Router, public projectService: ProjectService, private alertService: AlertService) {
+  constructor(public router: Router,
+              public projectService: ProjectService,
+              private alertService: AlertService,
+              private testService: TestService) {
   }
 
   ngOnInit() {
     this.alertService.clear();
-    this.project = history.state;
-    this.projectService.loadProject(this.project.projectId)
-      .subscribe(project => {
-        this.project = project;
-        this.loading = false;
-        this.formStatistics(project.tests)
+    this.project = history.state.project;
+    if (this.project) {
+      // TODO do not load project every time it is opened?
+      this.projectService.loadProject(this.project.projectId)
+        .subscribe(project => {
+          this.project = project;
+          this.teams = project.teams.map(team => {
+              return {
+                value: team.name,
+                display: team.name,
+                readonly: true
+              }
+            }
+          );
+          this.loading = false;
+          this.formStatistics(project.tests)
+        }, error => {
+          this.alertService.error(error);
+          this.loading = false;
+        })
+    } else {
+      // TODO get state from history?
+      this.router.navigate(['/projects'])
+    }
+  }
+
+  editProject() {
+    this.router.navigate(['/new_project'], {state: {project: this.project}});
+  }
+
+  stopTest(test: Test) {
+    this.testService.stopTest(test);
+  }
+
+  startTest(test: Test) {
+    this.testService.runTest(test)
+      .subscribe(data => {
+        // TODO update test status to queued?
+        this.alertService.success("Test started");
+        console.log(data);
       }, error => {
         this.alertService.error(error);
-        this.loading = false;
       })
+  }
+
+  editTest(test: Test) {
+    this.router.navigate(['/new_test'], {state: {project: this.project, test: test}});
   }
 
   private formStatistics(tests: Test[]) {
@@ -107,6 +148,7 @@ export class ProjectComponent implements OnInit {
    * @param data
    */
   private prepareStatistics(data: Map<number, Array<TestRun>>): ChartDataSets[] {
+    // TODO test me
     let passedData = [];
     let failedData = [];
     let runningData = [];
@@ -115,9 +157,9 @@ export class ProjectComponent implements OnInit {
       let failed = 0;
       let running = 0;
       for (let run of value) {
-        if (run.status == RunStatus.FINISHED) passed += 1;
-        if (run.status == RunStatus.FAILED) failed += 1;
-        if (run.status == RunStatus.STARTED || run.status == RunStatus.QUEUED) running += 1;
+        if (run.status == 'FINISHED') passed += 1;
+        if (run.status == 'FAILED') failed += 1;
+        if (run.status == 'STARTED' || run.status == 'QUEUED') running += 1;
       }
       passedData.push(passed);
       failedData.push(failed);

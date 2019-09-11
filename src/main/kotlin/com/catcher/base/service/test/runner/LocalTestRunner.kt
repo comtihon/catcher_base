@@ -29,7 +29,7 @@ class LocalTestRunner(@Autowired val testRunRepository: TestRunRepository,
         test.started = LocalDateTime.now()
         testRunRepository.save(test)
         try {
-            test.output = catcher.runTest(test.test.path)
+            test.output = catcher.runTest(test.test.path().toString())
             test.status = RunStatus.FINISHED
         } catch (e: ExecutionFailedException) {
             test.output = e.localizedMessage

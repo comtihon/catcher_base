@@ -16,7 +16,7 @@ import {RegisterComponent} from './register/register.component';
 import {NavbarComponent} from "./navbar/navbar.component";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {FooterComponent} from "./components/footer.component";
-import {DashboardComponent} from "./dashboard/dashboard.component";
+import {ProjectsComponent} from "./projects/projects.component";
 import {ChartsModule} from "ng2-charts";
 import {NewProjectComponent} from "./new-project/new-project.component";
 import {TagInputModule} from "ngx-chips";
@@ -35,7 +35,7 @@ import {AceEditorModule} from "ng2-ace-editor";
     NavbarComponent,
     SidebarComponent,
     FooterComponent,
-    DashboardComponent,
+    ProjectsComponent,
     HomeComponent,
     NewProjectComponent,
     ProjectComponent,

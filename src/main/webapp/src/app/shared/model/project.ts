@@ -1,6 +1,6 @@
 import {Test} from "./test";
-import {RunStatus} from "./test";
 import {Team} from "./team";
+import {Type} from "class-transformer";
 
 export class Project {
   projectId: number;
@@ -8,32 +8,34 @@ export class Project {
   description: string;
   remotePath: string;
   localPath: string;
+  @Type(() => Test)
   tests: Test[];
+  @Type(() => Team)
   teams: Team[];
 
   // TODO iterate tests only once
   failed(): Test[] {
     return this.tests.filter(test => {
-      return test.lastRun.status == RunStatus.FAILED
+      return test.lastRun && test.lastRun.status == 'FAILED'
     })
   }
 
   running(): Test[] {
     return this.tests.filter(test => {
-      return test.lastRun.status == RunStatus.QUEUED || test.lastRun.status == RunStatus.STARTED
+      return test.lastRun &&  (test.lastRun.status == 'QUEUED' || test.lastRun.status == 'STARTED')
     })
   }
 
   aborted(): Test[] {
     return this.tests.filter(test => {
-      return test.lastRun.status == RunStatus.ABORTED
+      return test.lastRun && test.lastRun.status == 'ABORTED'
     })
   }
 
   // TODO use local counters instead of filtering every time
   passed(): Test[] {
     return this.tests.filter(test => {
-      return test.lastRun.status == RunStatus.FINISHED
+      return test.lastRun && test.lastRun.status == 'FINISHED'
     })
   }
 }

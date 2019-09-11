@@ -1,6 +1,6 @@
 insert into projects
-values (1, 'test1', './proj1', null),
-       (2, 'test2', './proj2', null);
+values (1, 'test1', null, './proj1', null),
+       (2, 'test2', null, './proj2', null);
 
 insert into teams
 values ('teamA'),
@@ -20,10 +20,10 @@ values (1, 'teamA'),
        (2, 'teamB');
 
 insert into tests
-values (1, 'test1_1', './proj1/tests/test1', 1),
-       (2, 'test1_2', './proj1/tests/test2', 1),
-       (3, 'test2_1', './proj2/tests/test1', 2),
-       (4, 'test2_2', './proj2/tests/test2', 2);
+values (1, 'test1_1', now(), 1),
+       (2, 'test1_2', now(), 1),
+       (3, 'test2_1', now(), 2),
+       (4, 'test2_2', now(), 2);
 
 insert into runs
 values (1, 1, 'FAILED', '2019-07-18 10:10:25-07', '2019-07-18 10:12:25-07', 'error'),

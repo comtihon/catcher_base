@@ -1,7 +1,6 @@
 export class Test {
   id: number;
   name: string;
-  path: string;
   data: string;
   lastRun: TestRun;
   updatedAt: string;
@@ -15,13 +14,10 @@ export class Test {
 
 export class TestRun {
   id: number;
-  status: RunStatus;
+  status: string;  // TODO should be enum
+  queued: string;
   started: string;
   finsihed: string;
   output: string;
   test: Test
-}
-
-export enum RunStatus {
-  QUEUED, STARTED, FAILED, FINISHED, ABORTED,
 }

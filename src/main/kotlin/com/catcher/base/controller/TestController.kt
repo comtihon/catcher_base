@@ -25,13 +25,19 @@ class TestController(@Autowired val testService: TestService) {
     }
 
     // TODO async
-    @GetMapping("/run/{id}")
+    @PostMapping("/{id}/run")
     fun run(@PathVariable id: Int): CompletableFuture<TestRunDTO> {
         return testService.runTest(id)
     }
 
-    @GetMapping("/log/{id}")
+    @GetMapping("/{id}/log")
     fun log(@PathVariable id: Int): TestRunDTO? {
         return testService.status(id)
+    }
+
+    @DeleteMapping("/{id}/stop")
+    fun stop(@PathVariable id: Int) {
+        // TODO test_id.last_run vs test_run.id ?
+        // TODO implement me
     }
 }

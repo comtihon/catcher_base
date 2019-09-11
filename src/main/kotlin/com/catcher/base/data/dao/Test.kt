@@ -1,8 +1,11 @@
 package com.catcher.base.data.dao
 
 import com.catcher.base.data.dto.TestDTO
+import com.catcher.base.service.project.ProjectScanner
 import org.hibernate.annotations.JoinFormula
 import org.hibernate.annotations.UpdateTimestamp
+import java.nio.file.Path
+import java.nio.file.Paths
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -11,7 +14,6 @@ import javax.persistence.*
 data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
                 val id: Int,
                 val name: String,
-                val path: String,  // TODO store test content in database instead of FS?
                 @OneToMany(cascade = [CascadeType.REMOVE], mappedBy = "test")
                 val runs: MutableSet<TestRun>,
                 @ManyToOne(fetch = FetchType.EAGER)
@@ -33,25 +35,24 @@ data class Test(@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
         other as Test
 
         if (id != other.id) return false
-        if (path != other.path) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = id
-        result = 31 * result + path.hashCode()
-        return result
+        return id
     }
 
     override fun toString(): String {
-        return "Test(id=$id, name='$name', path='$path')"
+        return "Test(id=$id, name='$name')"
     }
 
-    fun toDTO(): TestDTO = TestDTO(id, name, path, null, lastRun?.toDTO(), updatedAt, null)
+    fun path(): Path = Paths.get(project.localPath, ProjectScanner.TEST_DIR, name)
+
+    fun toDTO(): TestDTO = TestDTO(id, name, null, lastRun?.toDTO(), updatedAt, null)
 
     /**
      * Includes all runs information
      */
-    fun toFullDTO(): TestDTO = TestDTO(id, name, path, null, lastRun?.toDTO(), updatedAt, runs.map(TestRun::toDTO))
+    fun toFullDTO(): TestDTO = TestDTO(id, name, null, lastRun?.toDTO(), updatedAt, runs.map(TestRun::toDTO))
 }

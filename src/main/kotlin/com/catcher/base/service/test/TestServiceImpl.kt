@@ -36,15 +36,13 @@ class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
      */
     @Transactional
     override fun newTest(projectId: Int, test: TestDTO) {
-        if (test.data == null && test.path == null)
+        // TODO test storage (local FS/FTP/Database/git)?
+        if (test.data == null)
             throw NoTestContentException()
         val project = projectRepo.findByIdOrNull(projectId) ?: throw ProjectNotFoundException()
-        if (test.path == null) {  // TODO test storage (local FS/FTP/Database/git)?
-            test.path = createFile(Paths.get(project.localPath, ProjectScanner.TEST_DIR, test.name), test.data!!)
-        }
+        createFile(Paths.get(project.localPath, ProjectScanner.TEST_DIR, test.name), test.data!!)
         val savedTest = testRepository.save(Test(0,
                 test.name,
-                test.path!!,
                 mutableSetOf(),
                 null,
                 project,
@@ -58,23 +56,24 @@ class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
         if (test.data == null)
             throw ParamRequiredException("Param data is required")
         val found = testRepository.findByIdOrNull(test.id) ?: throw FileNotFoundException("No such test")
-        updateFile(Paths.get(found.path), test.data!!)
+        updateFile(found.path(), test.data!!)
     }
 
     @Transactional
     override fun deleteTest(projectId: Int, testId: Int) {
         val test = testRepository.findByIdOrNull(testId) ?: throw FileNotFoundException("No such test")
         val project = projectRepo.findByIdOrNull(projectId) ?: throw ProjectNotFoundException()
-        if (!Paths.get(test.path).toFile().delete())
-            log.warn("Fail to delete ${test.path}")  // TODO inform user?
+        val path = test.path()
+        if (!path.toFile().delete())
+            log.warn("Fail to delete $path")  // TODO inform user?
         project.tests.remove(test)
         testRepository.delete(test)
     }
 
-    override fun contentForTest(testId: Int): TestDTO { // TODO return string instead?
+    override fun contentForTest(testId: Int): TestDTO {
         val test = testRepository.findByIdOrNull(testId) ?: throw FileNotFoundException("No such test")
-        val content = Paths.get(test.path).toFile().readText()
-        return TestDTO(test.id, test.name, test.path, content, test.lastRun?.toDTO(), null, null)
+        val content = test.path().toFile().readText()
+        return TestDTO(test.id, test.name, content, test.lastRun?.toDTO(), null, null)
     }
 
     override fun runTest(testId: Int): CompletableFuture<TestRunDTO> {

@@ -10,6 +10,7 @@ import {TeamService} from "../shared/services/team.service";
 import {ProjectService} from "../shared/services/project.service";
 import {Team} from "../shared/model/team";
 import {Router} from "@angular/router";
+import {Project} from "../shared/model/project";
 
 @Component({
   selector: 'app-forms',
@@ -19,6 +20,7 @@ export class NewProjectComponent implements OnInit {
   newProjectForm: FormGroup;
   submitted = false;
   waiting = false;
+  project: Project;
 
   teams = [];
 
@@ -39,6 +41,14 @@ export class NewProjectComponent implements OnInit {
       teams: []
     });
     this.teams = this.teamService.teamsValue.map(team => team.name);
+    this.project = history.state.project;
+    if(this.project) {
+      this.newProjectForm.controls.name.setValue(this.project.name);
+      this.newProjectForm.controls.description.setValue(this.project.description);
+      this.newProjectForm.controls.remotePath.setValue(this.project.remotePath);
+      this.newProjectForm.controls.localPath.setValue(this.project.localPath);
+      this.newProjectForm.controls.teams.setValue(this.project.teams.map(team => team.name));
+    }
   }
 
   get f() {
@@ -71,9 +81,10 @@ export class NewProjectComponent implements OnInit {
       .subscribe(() => {
         this.waiting = false;
         // TODO navigate to project's page instead!
+        // TODO update team service after successful project creation?
         this.router.navigate(['/projects']);
+      }, error => {
+        this.alertService.error(error);
       })
-    // TODO update team service after successful project creation?
-    // TODO show error (same issue as in login - OK is returned)
   }
 }

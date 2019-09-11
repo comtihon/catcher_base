@@ -2,8 +2,7 @@
   <div class="col-lg-7 grid-margin stretch-card">
     <div class="card card-statistics">
       <div class="card-body">
-        <h4 class="card-title">{{project.name}}</h4>
-        <p class="card-description">{{project.description}}</p>
+        <h4 class="card-title">Tests statistics</h4>
         <div *ngIf="loading" class="d-flex align-items-center">
           <strong>Loading...</strong>
           <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
@@ -17,8 +16,25 @@
       </div>
     </div>
   </div>
+  <div class="col-lg-5 grid-margin stretch-card">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Project: {{project.name}}</h4>
+        <p class="card-description">Description: {{project.description || 'not set'}}</p>
+        <p class="card-description">Local path: {{project.localPath}}</p>
+        <p class="card-description">Remote path: {{project.remotePath || 'not set'}}</p>
+        <tag-input [ngModel]="teams"
+                   [editable]="false"
+                   [maxItems]="teams.length">
+        </tag-input>
+        <!--          TODO for admin only -->
+        <!--        TODO new_project with filled it current project -->
+        <button type="button" class="btn btn-success" (click)="editProject()">Edit</button>
+      </div>
+      <!--      TODO resources-->
+    </div>
+  </div>
 </div>
-<!-- TODO no tests -> create one button -->
 <div class="row">
   <div *ngIf="project.tests && project.tests.length > 0" class="col-lg-12 grid-margin">
     <div class="card">
@@ -35,9 +51,6 @@
                 Name
               </th>
               <th>
-                Progress
-              </th>
-              <th>
                 Status
               </th>
               <th>
@@ -46,10 +59,14 @@
               <th>
                 Last run
               </th>
+              <th>
+                Action
+              </th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let test of project.tests; let i = index;">
+<!--              TODO background color depends on the test.lastRun.status -->
               <td class="font-weight-medium">
                 {{i}}
               </td>
@@ -57,25 +74,24 @@
                 {{test.name}}
               </td>
               <td>
-                <div *ngIf="test.lastRun.status == runStatus.STARTED"></div>
-                <div class="progress">
-                  <div class="progress-bar bg-success progress-bar-striped" role="progressbar" style="width: 25%"
-                       aria-valuenow="25" aria-valuemin="0"
-                       aria-valuemax="100"></div>
-                </div>
-                <div *ngIf="test.lastRun.status != runStatus.STARTED">
-                  Not running
-                </div>
-                <!--                TODO ABORT/RESTART button-->
-              </td>
-              <td>
-                {{test.lastRun.status}}
+                {{test.lastRun?.status}}
               </td>
               <td>
                 {{test.updatedAt}}
               </td>
               <td>
-                {{test.lastRun.started}}
+                {{test.lastRun?.started || 'never'}}
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary" (click)="editTest(test)">Edit</button>
+                <button
+                  *ngIf="test.lastRun?.status == 'QUEUED' || test.lastRun?.status == 'STARTED'; else start"
+                  type="button" class="btn btn-danger" (click)="stopTest(test)">Stop
+                </button>
+                <ng-template #start>
+                  <button type="button" class="btn btn-success" (click)="startTest(test)">Start
+                  </button>
+                </ng-template>
               </td>
             </tr>
             </tbody>

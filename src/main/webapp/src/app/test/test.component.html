@@ -8,15 +8,24 @@
   <button type="button" class="btn btn-success btn-block" (click)="onSave()">
     <i class="mdi mdi-cloud-download"></i>Upload
   </button>
+<!--  TODO run button in case of test != null?-->
 </div>
 
 <div class="form-group">
   <div class="input-group">
     <span class="input-group-addon" id="basic-addon1">@</span>
-    <input #testName type="text" class="form-control" placeholder="Username" aria-label="Test name" aria-describedby="basic-addon1">
+    <input type="text"
+           class="form-control"
+           placeholder="Test name"
+           aria-label="Test name"
+           aria-describedby="basic-addon1"
+           [(ngModel)]="testName">
   </div>
+  <p *ngIf="loading" class="spinner-grow spinner-grow-sm col-sm" role="status" aria-hidden="true"></p>
 </div>
 
 <ace-editor [(text)]="content" #editor [options]="options" [mode]="mode"
             [autoUpdateContent]="true" (textChanged)="onChange($event)"
             style="min-height: 200px; width:100%; overflow: auto;"></ace-editor>
+
+<!-- TODO runs history + progress in case of test != null? -->

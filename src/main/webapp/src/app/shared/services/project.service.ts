@@ -56,7 +56,7 @@ export class ProjectService {
 
   // load project's full info
   loadProject(projectId: number) {
-    return this.http.get<any>('/api/v1/project/' + projectId)
+    return this.http.get<any>(`/api/v1/project/${projectId}`)
   }
 
   gatherStatistics(): number[] {
@@ -65,9 +65,10 @@ export class ProjectService {
       let aborted = project.aborted().length;
       let running = project.running().length;
       let failed = project.failed().length;
+      let passed = project.passed().length;
       statistics.aborted += aborted;
       statistics.running += running;
-      statistics.passed += project.tests.length - aborted - running - failed;
+      statistics.passed += passed;
       statistics.failed += failed;
     }
     return statistics.asChartData()

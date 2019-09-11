@@ -1,14 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:catcher}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true
-    username: ${DB_USER:test}
-    password: ${DB_PASS:test}
+    url: jdbc:h2:mem:test
   jpa: # disable stacktrace on system start from hibernate (checking supported features)
     properties:
       hibernate:
-        jdbc:
-          lob:
-            non_contextual_creation: true
+        dialect:  org.hibernate.dialect.H2Dialect
   security:
     oauth2:
       client:
@@ -16,13 +12,18 @@ spring:
         clientSecret: catcher_secret
         scope: read,write
         autoApproveScopes: '.*'
+security:
+  oauth2:
+    client:
+      clientId: catcher
+      clientSecret: catcher_secret
 catcher:
   base:
     local_dir: ${LOCAL_DIR:./}
     jwt:
       private: ${JWT_PRIV:catcher_priv}
   system:
-    conda_name: catcher_base_env
+    venv_name: test
   executor:
     local:
       pool:

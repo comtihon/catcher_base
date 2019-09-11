@@ -58,9 +58,8 @@ CREATE TABLE projects_teams
 CREATE TABLE tests
 (
     id         SERIAL PRIMARY KEY,
-    name       varchar(255),
-    path       varchar(500) unique,
-    updated_at  timestamp,
+    name       varchar(255) unique,
+    updated_at timestamp,
     project_id integer REFERENCES projects (id)
 );
 
@@ -69,7 +68,8 @@ CREATE TABLE runs
     id       SERIAL PRIMARY KEY,
     test_id  integer REFERENCES tests (id),
     status   varchar(12) not null,
-    started  TIMESTAMP   not null,
+    queued   TIMESTAMP   not null,
+    started  TIMESTAMP,
     finished TIMESTAMP,
     output   text
 );

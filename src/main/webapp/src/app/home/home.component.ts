@@ -53,7 +53,8 @@ export class HomeComponent implements OnInit {
       .subscribe(() => {
         this.systemInfo = this.systemService.systemInfoValue;
       }, error => {
-        // TODO handle error
+        // TODO notify user via gui?
+        console.error(error)
       });
     this.projectService.loadProjects()
       .subscribe(() => {

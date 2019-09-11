@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
     this.userRole = this.userService.currentUser.map(x => x.role? x.role.name : "");
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd && event.url == '/project') {
-        this.currentProject = history.state;
+        this.currentProject = history.state.project;
       }
     })
   }
@@ -32,6 +32,10 @@ export class SidebarComponent implements OnInit {
   }
 
   newTest(): void {
-    this.router.navigate(['/new_test'], {state: this.currentProject});
+    this.router.navigate(['/new_test'], {state: {project: this.currentProject}});
+  }
+
+  newResource() {
+    // TODO
   }
 }

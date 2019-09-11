@@ -23,7 +23,7 @@ export class NavbarComponent implements OnInit {
               private userService: UserService,
               private authService: AuthService) {
     config.placement = 'bottom-right';
-    this.notifications = projectService.notificationsValue;
+    this.projectService.notifications.subscribe(x => this.notifications = x);
     this.userService.currentUser.subscribe(x => this.currentUser = x);
   }
 
@@ -36,12 +36,13 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  ngOnInit() {  // TODO teams is updated after this page is rendered. Need to subscribe to user service.
+  ngOnInit() {
     this.projectService.loadNotifications()
       .subscribe(() => {
         this.notifications = this.projectService.notificationsValue;
       }, error => {
         // TODO handle error
+        console.error(error)
       })
   }
 

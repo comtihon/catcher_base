@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {AppSettings} from '../appsettings';
-import {map} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {UserService} from "./user.service";
 
 @Injectable({

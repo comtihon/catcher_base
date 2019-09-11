@@ -11,6 +11,7 @@ import * as yaml from "js-yaml";
 import {AlertService} from "../shared/services/alert.service";
 import {TestService} from "../shared/services/test.service";
 import {Test} from "../shared/model/test";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-new-test',
@@ -22,7 +23,6 @@ export class TestComponent implements OnInit {
   @ViewChild('editor', {static: true}) editor;
   @ViewChild('yaml', {static: true}) yaml;
   @ViewChild('json', {static: true}) json;
-  @ViewChild('testName', {static: true}) testName;
   options: any = {
     enableBasicAutocompletion: true,
     enableLiveAutocompletion: true,
@@ -32,18 +32,36 @@ export class TestComponent implements OnInit {
   content: string;
   mode = 'yaml';
   project: Project;
+  testName: string = "";
   validator: Validator = null; // TODO change me when mode changes
   model = {
     yaml: true,
     json: false
   };
+  test: Test;
+  loading = false;
 
-  constructor(private alertService: AlertService, private testService: TestService) {
+  constructor(private alertService: AlertService, private testService: TestService, public router: Router) {
   }
 
   ngOnInit() {
-    this.project = history.state;
-    this.content = '';
+    this.project = history.state.project;
+    this.test = history.state.test;
+    if (this.test) {
+      this.testName = this.test.name;
+      this.loading = true;
+      this.testService.loadTest(this.project, this.test)
+        .subscribe(test => {
+          this.test = test;
+          this.content = this.test.data;
+          this.loading = false;
+        }, error => {
+          this.loading = false;
+          this.alertService.error(error)
+        });
+    } else {
+      this.content = '';
+    }
     this.editor.getEditor().completers = [new StepsAutoCompleter()];
     this.validator = new AceYamlValidator();
   }
@@ -60,9 +78,29 @@ export class TestComponent implements OnInit {
   }
 
   onSave() {
-    // TODO require test name?
-    this.testService.newTest(this.project, new Test(this.testName.text, this.content));
-    //  TODO handle response
+    this.alertService.clear();
+    if (this.testName.length == 0) {
+      this.alertService.error("Test name required")
+    } else {
+      if (this.test) { // update test
+        this.test.data = this.content;
+        this.testService.updateTest(this.test)
+          .subscribe(_ => {
+            this.router.navigate(['/project'], {state: {project: this.project}});
+          }, error => {
+            this.alertService.error(error)
+          })
+      } else {  // create new test
+        this.testService.newTest(this.project, new Test(this.testName + `.${this.mode}`, this.content))
+          .subscribe(
+            _ => {
+              this.router.navigate(['/project'], {state: {project: this.project}});
+            },
+            error => {
+              this.alertService.error(error)
+            })
+      }
+    }
   }
 
   /**

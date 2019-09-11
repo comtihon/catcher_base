@@ -138,10 +138,10 @@ internal class TestServiceTest : FunctionalTest() {
         addTest(Paths.get(testDir, name), content = content)
         return testRepository.save(com.catcher.base.data.dao.Test(0,
                 name,
-                Paths.get(testDir, name).toString(),
                 mutableSetOf(),
                 null,
-                project))
+                project,
+                LocalDateTime.now()))
     }
 
     // TODO test concurrent execution (override default coreSize from config)

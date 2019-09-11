@@ -54,15 +54,13 @@ class ProjectScanner(@Autowired val testRepository: TestRepository,
         }
         val tests: MutableSet<Path> = mutableSetOf()
         indexPath(Files.list(testPath), tests)
-
         // add new tests
-        val names = project.tests.map(Test::path)
+        val names = project.tests.map { it.path().toString() }
         tests.filter { !names.contains(it.toString()) }
                 .map {
                     testRepository.save(
                             Test(0,
                                     it.fileName.toString(),
-                                    it.toString(),
                                     mutableSetOf(),
                                     null,
                                     project,
@@ -71,7 +69,7 @@ class ProjectScanner(@Autowired val testRepository: TestRepository,
                 .forEach { project.tests.add(it) }
         // remove old tests
         val testsStr = tests.map { it.toString() }
-        project.tests.removeIf { !testsStr.contains(it.path) }
+        project.tests.removeIf { !testsStr.contains(it.path().toString()) }
         // TODO remove tests from database (and history)?
     }
 

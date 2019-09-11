@@ -56,18 +56,10 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     this.authenticationService.login(this.f.username.value, this.f.password.value)
-      .pipe(first())
       .subscribe(() => {
           this.router.navigate([this.returnUrl]);
         },
-        error => { // TODO error is always OK!
-          if (error.error instanceof ErrorEvent) {
-            console.error('An error occurred:', error.error.message);
-          } else {
-            console.error(
-              `Backend returned code ${error.status}, ` +
-              `body was: ${error.error}`);
-          }
+        error => {
           this.alertService.error(error);
           this.loading = false;
         });
