@@ -15,9 +15,11 @@ class LocalToolService(@Autowired val systemTool: SystemTool,
     @PostConstruct
     fun init() {
         version = systemTool.version()
-        if (version.isBlank()) { // no environment installed
+        if (version == "not installed") { // no environment installed
             log.info("Installing python. This may take a while")
             systemTool.install()
+        }
+        if (catcher.version() == "not installed") {
             log.info("Installing catcher. This may take a while")
             catcher.install()
         }

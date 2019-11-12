@@ -19,6 +19,6 @@ class Conda : SystemTool() {
     }
 
     override fun execute(command: String): String {
-        return runCommand(arrayListOf("bash", "-c", "source activate $env; $command"))
+        return runCommand(arrayListOf("bash", "-c", "source activate $env && $command"))
     }
 }
