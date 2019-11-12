@@ -9,7 +9,11 @@ abstract class SystemTool {
     private val log = LoggerFactory.getLogger(this::class.java)
 
     open fun version(): String {
-        return execute("python --version")
+        return try {
+            execute("python --version")
+        } catch (e: ExecutionFailedException) {
+            "not installed"
+        }
     }
 
     @Throws(ExecutionFailedException::class)
