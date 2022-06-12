@@ -1,20 +1,13 @@
 package com.catcher.base.config
 
-import com.catcher.base.data.dao.Test
-import com.catcher.base.data.dao.TestRun
+import com.catcher.base.data.entity.Test
+import com.catcher.base.data.entity.TestRun
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Scope
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor
 import java.util.concurrent.Executor
-import org.springframework.core.Ordered
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry
-import org.springframework.boot.web.servlet.ServletRegistrationBean
-
-
-
-
 
 
 @Configuration

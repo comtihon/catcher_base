@@ -1,6 +1,6 @@
 package com.catcher.base.data.dto
 
-import com.catcher.base.data.dao.Team
+import com.catcher.base.data.entity.Team
 import com.catcher.base.data.dto.validation.ValidTeamName
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull

@@ -1,6 +1,6 @@
 package com.catcher.base.data.dto
 
-import com.catcher.base.data.dao.RunStatus
+import com.catcher.base.data.entity.RunStatus
 import java.time.LocalDateTime
 
 data class TestRunDTO(val id: Int,

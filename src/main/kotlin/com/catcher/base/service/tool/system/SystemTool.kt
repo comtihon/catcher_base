@@ -24,12 +24,13 @@ abstract class SystemTool {
 
     @Throws(ExecutionFailedException::class)
     fun String.runCommand(workingDir: File = File(".")): String {
+        log.info("run: $this")
         return runCommand(this.split("\\s".toRegex()), workingDir)
     }
 
     @Throws(ExecutionFailedException::class)
     fun runCommand(command: List<String>, workingDir: File = File(".")): String {
-        var proc: Process? = null
+        var proc: Process?
         try {
             proc = ProcessBuilder(command)
                     .directory(workingDir)
@@ -37,14 +38,18 @@ abstract class SystemTool {
                     .redirectError(ProcessBuilder.Redirect.PIPE)
                     .start()
             proc.waitFor()
-            if (proc.exitValue() != 0)
-                throw ExecutionFailedException(proc!!.errorStream.bufferedReader().readText())
             if (proc.errorStream.available() != 0) {
                 log.warn(proc.errorStream.bufferedReader().readText())
             }
+            if (proc.exitValue() != 0) {
+                var errorMsg = proc!!.errorStream.bufferedReader().readText()
+                if (errorMsg.isBlank())
+                    errorMsg = proc.inputStream.bufferedReader().readText()
+                throw ExecutionFailedException(errorMsg)
+            }
             return proc.inputStream.bufferedReader().readText()
         } catch (e: IOException) {
-            throw ExecutionFailedException(proc!!.errorStream.bufferedReader().readText())
+            throw ExecutionFailedException(e.message!!)
         }
     }
 }

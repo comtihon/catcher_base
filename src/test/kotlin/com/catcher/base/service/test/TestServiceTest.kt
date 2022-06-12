@@ -1,9 +1,9 @@
 package com.catcher.base.service.test
 
 import com.catcher.base.FunctionalTest
-import com.catcher.base.data.dao.Project
-import com.catcher.base.data.dao.RunStatus
-import com.catcher.base.data.dao.TestRun
+import com.catcher.base.data.entity.Project
+import com.catcher.base.data.entity.RunStatus
+import com.catcher.base.data.entity.TestRun
 import com.catcher.base.data.repository.ProjectRepository
 import com.catcher.base.data.repository.TestRepository
 import com.catcher.base.data.repository.TestRunRepository
@@ -117,31 +117,36 @@ internal class TestServiceTest : FunctionalTest() {
         Assert.assertEquals(RunStatus.FINISHED, dbRun2!!.status)
     }
 
-    private fun newTestOK(project: Project, name: String): com.catcher.base.data.dao.Test {
-        return newTest(project, name, """---
+    private fun newTestOK(project: Project, name: String): com.catcher.base.data.entity.Test {
+        return newTest(
+            project, name, """---
                           steps:
                              - echo: {from: 'hello', register: {'foo': 'value'}}
                              - check: {equals: {the: '{{ foo }}', is: 'value'}}
-                          """.trimIndent())
+                          """.trimIndent()
+        )
     }
 
-    private fun newTestFail(project: Project, name: String): com.catcher.base.data.dao.Test {
-        return newTest(project, name, """---
+    private fun newTestFail(project: Project, name: String): com.catcher.base.data.entity.Test {
+        return newTest(
+            project, name, """---
                           steps:
                              - echo: {from: 'hello', register: {'foo': 'value'}}
                              - check: {equals: {the: '{{ foo }}', is: 'error'}}
-                          """.trimIndent())
+                          """.trimIndent()
+        )
     }
 
-    private fun newTest(project: Project, name: String, content: String): com.catcher.base.data.dao.Test {
+    private fun newTest(project: Project, name: String, content: String): com.catcher.base.data.entity.Test {
         val testDir = Paths.get(project.localPath, ProjectScanner.TEST_DIR).toString()
         addTest(Paths.get(testDir, name), content = content)
-        return testRepository.save(com.catcher.base.data.dao.Test(0,
-                name,
-                mutableSetOf(),
-                null,
-                project,
-                LocalDateTime.now()))
+        return testRepository.save(
+            com.catcher.base.data.entity.Test(
+                name = name,
+                path = "",
+                project = project
+            ).apply { updatedAt = LocalDateTime.now() }
+        )
     }
 
     // TODO test concurrent execution (override default coreSize from config)

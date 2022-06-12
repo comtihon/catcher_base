@@ -1,6 +1,6 @@
 package com.catcher.base.service.test.runner
 
-import com.catcher.base.data.dao.TestRun
+import com.catcher.base.data.entity.TestRun
 import java.util.concurrent.CompletableFuture
 
 interface TestRunner {

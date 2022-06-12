@@ -1,7 +1,7 @@
 package com.catcher.base.service.project
 
-import com.catcher.base.data.dao.Project
-import com.catcher.base.data.dao.Team
+import com.catcher.base.data.entity.Project
+import com.catcher.base.data.entity.Team
 import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.repository.ProjectRepository
@@ -98,6 +98,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
     /**
      * Ensure projects dir and scan all existing projects for updates.
      */
+    // TODO job to do it periodically?
     @PostConstruct
     fun init() {
         val root = projectDir().toFile()
@@ -116,7 +117,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
                 scanner.scanProject(existing)
             }
         }
-        // TODO remove deleted projects?
+        // TODO mark deleted projects as deleted & offer autoclean on UI
     }
 
     /**

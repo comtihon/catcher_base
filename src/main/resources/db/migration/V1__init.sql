@@ -59,6 +59,7 @@ CREATE TABLE tests
 (
     id         SERIAL PRIMARY KEY,
     name       varchar(255) unique,
+    path       varchar(255),
     updated_at timestamp,
     project_id integer REFERENCES projects (id)
 );

@@ -1,0 +1,4 @@
+---
+                          steps:
+                             - echo: {from: 'hello', register: {'foo': 'value'}}
+                             - check: {equals: {the: '{{ foo }}', is: 'value'}}

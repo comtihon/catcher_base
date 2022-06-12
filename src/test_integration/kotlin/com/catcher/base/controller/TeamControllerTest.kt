@@ -1,8 +1,8 @@
 package com.catcher.base.controller
 
 import com.catcher.base.IntegrationTest
-import com.catcher.base.data.dao.Team
-import com.catcher.base.data.dao.User
+import com.catcher.base.data.entity.Team
+import com.catcher.base.data.entity.User
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.repository.TeamRepository
 import com.catcher.base.service.team.TeamService

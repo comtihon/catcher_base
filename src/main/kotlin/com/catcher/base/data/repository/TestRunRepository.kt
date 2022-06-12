@@ -1,6 +1,6 @@
 package com.catcher.base.data.repository
 
-import com.catcher.base.data.dao.TestRun
+import com.catcher.base.data.entity.TestRun
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository

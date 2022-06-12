@@ -1,6 +1,6 @@
 package com.catcher.base.service.security
 
-import com.catcher.base.data.dao.User
+import com.catcher.base.data.entity.User
 import com.catcher.base.data.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.GrantedAuthority

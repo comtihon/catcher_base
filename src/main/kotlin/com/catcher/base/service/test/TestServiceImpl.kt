@@ -1,8 +1,8 @@
 package com.catcher.base.service.test
 
-import com.catcher.base.data.dao.RunStatus
-import com.catcher.base.data.dao.Test
-import com.catcher.base.data.dao.TestRun
+import com.catcher.base.data.entity.RunStatus
+import com.catcher.base.data.entity.Test
+import com.catcher.base.data.entity.TestRun
 import com.catcher.base.data.dto.TestDTO
 import com.catcher.base.data.dto.TestRunDTO
 import com.catcher.base.data.repository.ProjectRepository
@@ -23,11 +23,13 @@ import java.util.concurrent.CompletableFuture
 import javax.annotation.PostConstruct
 
 @Service
-class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
-                      @Autowired val testRepository: TestRepository,
-                      @Autowired val testRunner: TestRunner,
-                      @Autowired val runFactory: ObjectProvider<TestRun>,
-                      @Autowired val testRunRepository: TestRunRepository) : TestService {
+class TestServiceImpl(
+    @Autowired val projectRepo: ProjectRepository,
+    @Autowired val testRepository: TestRepository,
+    @Autowired val testRunner: TestRunner,
+    @Autowired val runFactory: ObjectProvider<TestRun>,
+    @Autowired val testRunRepository: TestRunRepository
+) : TestService {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -41,12 +43,13 @@ class TestServiceImpl(@Autowired val projectRepo: ProjectRepository,
             throw NoTestContentException()
         val project = projectRepo.findByIdOrNull(projectId) ?: throw ProjectNotFoundException()
         createFile(Paths.get(project.localPath, ProjectScanner.TEST_DIR, test.name), test.data!!)
-        val savedTest = testRepository.save(Test(0,
-                test.name,
-                mutableSetOf(),
-                null,
-                project,
-                null))
+        val savedTest = testRepository.save(
+            Test(
+                name = test.name,
+                path = "",
+                project = project
+            )
+        )
         project.tests.add(savedTest)
     }
 

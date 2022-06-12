@@ -1,7 +1,7 @@
 package com.catcher.base.service.test.runner
 
-import com.catcher.base.data.dao.RunStatus
-import com.catcher.base.data.dao.TestRun
+import com.catcher.base.data.entity.RunStatus
+import com.catcher.base.data.entity.TestRun
 import com.catcher.base.data.repository.TestRunRepository
 import com.catcher.base.exception.ExecutionFailedException
 import com.catcher.base.service.tool.Catcher

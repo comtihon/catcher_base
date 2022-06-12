@@ -1,7 +1,7 @@
 package com.catcher.base.service.project
 
-import com.catcher.base.data.dao.Project
-import com.catcher.base.data.dao.Test
+import com.catcher.base.data.entity.Project
+import com.catcher.base.data.entity.Test
 import com.catcher.base.data.repository.TestRepository
 import com.catcher.base.service.project.fetcher.FetcherFactory
 import org.slf4j.LoggerFactory
@@ -13,8 +13,10 @@ import java.nio.file.Paths
 import java.util.stream.Stream
 
 @Component
-class ProjectScanner(@Autowired val testRepository: TestRepository,
-                     @Autowired val fetcherFactory: FetcherFactory) {
+class ProjectScanner(
+    @Autowired val testRepository: TestRepository,
+    @Autowired val fetcherFactory: FetcherFactory
+) {
 
     private val log = LoggerFactory.getLogger(this::class.java)
 
@@ -54,20 +56,24 @@ class ProjectScanner(@Autowired val testRepository: TestRepository,
         }
         val tests: MutableSet<Path> = mutableSetOf()
         indexPath(Files.list(testPath), tests)
-        // add new tests
+        // add only new tests
         val names = project.tests.map { it.path().toString() }
         tests.filter { !names.contains(it.toString()) }
-                .map {
-                    testRepository.save(
-                            Test(0,
-                                    it.fileName.toString(),
-                                    mutableSetOf(),
-                                    null,
-                                    project,
-                                    null))
-                }
-                .forEach { project.tests.add(it) }
-        // remove old tests
+            .map {
+                val rel = testPath.relativize(it)
+                var testDir = ""
+                if(rel != rel.fileName)
+                    testDir = rel.parent.toString()
+                testRepository.save(
+                    Test(
+                        name = it.fileName.toString(),
+                        path = testDir,
+                        project = project
+                    )
+                )
+            }
+            .forEach { project.tests.add(it) }
+        // remove old tests (deleted or renamed in project's dir)
         val testsStr = tests.map { it.toString() }
         project.tests.removeIf { !testsStr.contains(it.path().toString()) }
         // TODO remove tests from database (and history)?
@@ -82,8 +88,9 @@ class ProjectScanner(@Autowired val testRepository: TestRepository,
         files.forEach {
             val file = it.toFile()
             if (file.isFile && (file.extension.toLowerCase() == "yaml"
-                            || file.extension.toLowerCase() == "yml"
-                            || file.extension.toLowerCase() == "json")) {
+                        || file.extension.toLowerCase() == "yml"
+                        || file.extension.toLowerCase() == "json")
+            ) {
                 tests.add(it)
             } else if (file.isDirectory) {
                 indexPath(Files.list(it), tests)

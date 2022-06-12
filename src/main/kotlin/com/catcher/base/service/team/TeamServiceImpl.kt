@@ -1,7 +1,7 @@
 package com.catcher.base.service.team
 
-import com.catcher.base.data.dao.Team
-import com.catcher.base.data.dao.User
+import com.catcher.base.data.entity.Team
+import com.catcher.base.data.entity.User
 import com.catcher.base.data.dto.TeamDTO
 import com.catcher.base.data.dto.UserDTO
 import com.catcher.base.data.repository.TeamRepository

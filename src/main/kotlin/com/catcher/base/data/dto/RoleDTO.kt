@@ -1,6 +1,6 @@
 package com.catcher.base.data.dto
 
-import com.catcher.base.data.dao.Role
+import com.catcher.base.data.entity.Role
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 

@@ -30,7 +30,7 @@ internal class ScanOnRuntimeTest : ProjectTest() {
         projectService.init()
 
         // projects were created
-        val allProjects = projectRepository.findAll().toList()
+        val allProjects = projectRepository.findAll().toList().sortedBy { it.name }
         Assert.assertEquals(2, allProjects.size)
         Assert.assertEquals("project1", allProjects[0].name)
         Assert.assertEquals("project2", allProjects[1].name)

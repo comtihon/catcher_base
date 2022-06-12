@@ -1,7 +1,7 @@
 package com.catcher.base
 
-import com.catcher.base.data.dao.Project
-import com.catcher.base.data.dao.User
+import com.catcher.base.data.entity.Project
+import com.catcher.base.data.entity.User
 import com.catcher.base.data.dto.ProjectDTO
 import com.catcher.base.data.repository.PrivilegeRepository
 import com.catcher.base.data.repository.RoleRepository

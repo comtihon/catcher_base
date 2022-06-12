@@ -1,6 +1,6 @@
 package com.catcher.base.repository
 
-import com.catcher.base.data.dao.User
+import com.catcher.base.data.entity.User
 import com.catcher.base.data.repository.PrivilegeRepository
 import com.catcher.base.data.repository.RoleRepository
 import com.catcher.base.data.repository.UserRepository

@@ -1,6 +1,6 @@
 package com.catcher.base.data.repository
 
-import com.catcher.base.data.dao.User
+import com.catcher.base.data.entity.User
 import org.springframework.data.repository.CrudRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query

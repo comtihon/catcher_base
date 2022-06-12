@@ -1,6 +1,6 @@
 package com.catcher.base.service.security.roles
 
-import com.catcher.base.data.dao.Privilege
+import com.catcher.base.data.entity.Privilege
 import com.catcher.base.data.dto.RoleDTO
 import com.catcher.base.data.repository.PrivilegeRepository
 import com.catcher.base.data.repository.RoleRepository

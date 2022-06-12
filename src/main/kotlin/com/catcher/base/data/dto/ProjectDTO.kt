@@ -1,6 +1,6 @@
 package com.catcher.base.data.dto
 
-import com.catcher.base.data.dao.Project
+import com.catcher.base.data.entity.Project
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
