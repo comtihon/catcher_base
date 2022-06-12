@@ -75,4 +75,4 @@ CREATE TABLE runs
     output   text
 );
 
-CREATE SEQUENCE hibernate_sequence START 1;
+CREATE SEQUENCE hibernate_sequence AS BIGINT START WITH 1 INCREMENT BY 1;

@@ -25,7 +25,7 @@ class RolesServiceImpl(@Autowired val roleRepository: RoleRepository,
     }
 
     override fun newRole(roleDTO: RoleDTO): RoleDTO {
-        return roleRepository.save(roleDTO.toDAO()).toDTO() // TODO testme in case of non-unique conflict (400 error)
+        return roleRepository.save(roleDTO.toEntity()).toDTO() // TODO testme in case of non-unique conflict (400 error)
     }
 
     override fun updateRole(roleDTO: RoleDTO): RoleDTO {

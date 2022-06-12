@@ -48,7 +48,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
         val isNew =
                 if (existing == null) { // new project - create directories
                     projectDto.localPath = ensureDirectories(projectDto)
-                    existing = projectDto.toDAO()
+                    existing = projectDto.toEntity()
                     true
                 } else { // update existing project (local path can't be updated) TODO allow?
                     existing.apply {
@@ -110,7 +110,7 @@ class ProjectServiceImpl(@Autowired val projectRepo: ProjectRepository,
             val name = it.fileName.toString()
             var existing = projectRepo.findProjectByName(name)
             if (existing == null) { // new project - only index project as we have no information about remote
-                existing = ProjectDTO(name, it.toString()).toDAO()
+                existing = ProjectDTO(name, it.toString()).toEntity()
                 projectRepo.save(existing)
                 scanner.indexProject(existing)
             } else { // existing project

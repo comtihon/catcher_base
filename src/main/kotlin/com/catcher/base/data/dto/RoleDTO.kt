@@ -8,5 +8,5 @@ data class RoleDTO(val id: Int?,
                    @NotEmpty @NotNull
                    val name: String,
                    val privileges: List<String>) {
-    fun toDAO() = Role(0, name, mutableSetOf(), mutableSetOf())
+    fun toEntity() = Role(0, name, mutableSetOf(), mutableSetOf())
 }

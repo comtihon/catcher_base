@@ -52,6 +52,7 @@ class ProjectScanner(
     fun indexProject(project: Project) {
         val testPath = Paths.get(project.localPath, TEST_DIR)
         if (!testPath.toFile().exists()) {
+            log.warn("No such file: $testPath")
             throw Exception("Project's local dir is corrupted.")
         }
         val tests: MutableSet<Path> = mutableSetOf()

@@ -18,11 +18,11 @@ import org.springframework.transaction.annotation.Transactional
 class TeamServiceImpl(@Autowired val teamRepository: TeamRepository,
                       @Autowired val userRepository: UserRepository) : TeamService {
     override fun upsertTeam(team: TeamDTO): TeamDTO {
-        return teamRepository.save(team.toDAO()).toDTO()
+        return teamRepository.save(team.toEntity()).toDTO()
     }
 
     override fun ensureTeam(team: TeamDTO): Team {
-        return teamRepository.findByIdOrNull(team.name) ?: teamRepository.save(team.toDAO())
+        return teamRepository.findByIdOrNull(team.name) ?: teamRepository.save(team.toEntity())
     }
 
     @Transactional

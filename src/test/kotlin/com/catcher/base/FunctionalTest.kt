@@ -37,20 +37,26 @@ abstract class FunctionalTest {
     @Value("\${security.oauth2.client.client-secret}")
     val secret: String? = null
 
-    val testProjectDir = Paths.get(java.io.File(".").canonicalPath,
-            "src",
-            "test",
-            "resources",
-            this.javaClass.name)!!
+    val testProjectDir: Path = Paths.get(
+        java.io.File(".").canonicalPath,
+        "src",
+        "test",
+        "resources",
+        this.javaClass.name
+    )
 
     @Autowired
     lateinit var userRepository: UserRepository
+
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
+
     @Autowired
     lateinit var roleRepository: RoleRepository
+
     @Autowired
     lateinit var template: TestRestTemplate
+
     @Autowired
     lateinit var privilegeRepository: PrivilegeRepository
 
@@ -62,16 +68,31 @@ abstract class FunctionalTest {
     @Before
     fun setUp() {
         recreateRoles(roleRepository, privilegeRepository)
-        userRepository.save(User(email = adminEmail, name = "test1",
+        userRepository.save(
+            User(
+                email = adminEmail, name = "test1",
                 phash = passwordEncoder.encode(adminPass), lastLogin = null,
-                role = roleRepository.findByName("admin")!!, teams = emptySet()))
-        userRepository.save(User(email = userEmail, name = "test2",
+                role = roleRepository.findByName("admin")!!, teams = emptySet()
+            )
+        )
+        userRepository.save(
+            User(
+                email = userEmail, name = "test2",
                 phash = passwordEncoder.encode(userPass), lastLogin = null,
-                role = roleRepository.findByName("user")!!, teams = emptySet()))
+                role = roleRepository.findByName("user")!!, teams = emptySet()
+            )
+        )
     }
 
     @After
     fun tearDown() {
+        Paths.get(
+            java.io.File(".").canonicalPath,
+            "src",
+            "test",
+            "resources",
+            "data"
+        ).toFile().deleteRecursively()
         Paths.get("projects").toFile().deleteRecursively()
     }
 
@@ -87,17 +108,30 @@ abstract class FunctionalTest {
         request.set("grant_type", "password")
 
         return template.withBasicAuth(clientId, secret)
-                .postForObject(UriComponentsBuilder.fromPath("/oauth/token").build().toUri(),
-                        request, Map::class.java)
+            .postForObject(
+                UriComponentsBuilder.fromPath("/oauth/token").build().toUri(),
+                request, Map::class.java
+            )
     }
 
-    protected fun <T> postWithToken(path: String, body: Any, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
-            withToken(path, token, body, HttpMethod.POST, responseType)
+    protected fun <T> postWithToken(
+        path: String,
+        body: Any,
+        token: Map<*, *>,
+        responseType: Class<T>
+    ): ResponseEntity<T> =
+        withToken(path, token, body, HttpMethod.POST, responseType)
 
     protected fun <T> getWithToken(path: String, token: Map<*, *>, responseType: Class<T>): ResponseEntity<T> =
-            withToken(path, token, null, HttpMethod.GET, responseType)
+        withToken(path, token, null, HttpMethod.GET, responseType)
 
-    private fun <T> withToken(path: String, token: Map<*, *>, body: Any?, method: HttpMethod, responseType: Class<T>): ResponseEntity<T> {
+    private fun <T> withToken(
+        path: String,
+        token: Map<*, *>,
+        body: Any?,
+        method: HttpMethod,
+        responseType: Class<T>
+    ): ResponseEntity<T> {
         val headers = HttpHeaders()
         headers.add(HttpHeaders.AUTHORIZATION, "Bearer ${token["access_token"]}")
         headers.contentType = MediaType.APPLICATION_JSON
@@ -116,12 +150,14 @@ abstract class FunctionalTest {
         projectDir.toFile().mkdirs()
         val testDir = Paths.get(projectDir.toString(), ProjectScanner.TEST_DIR)
         testDir.toFile().mkdirs()
-        return Project(0,
-                "testProject",
-                null,
-                projectDir.toString(),
-                null,
-                mutableSetOf(),
-                mutableSetOf())
+        return Project(
+            0,
+            "testProject",
+            null,
+            projectDir.toString(),
+            null,
+            mutableSetOf(),
+            mutableSetOf()
+        )
     }
 }

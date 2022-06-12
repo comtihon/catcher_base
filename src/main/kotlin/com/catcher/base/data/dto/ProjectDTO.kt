@@ -17,13 +17,13 @@ data class ProjectDTO(val projectId: Int?,
             this(0, name, null, null,
                     localPath, emptyList<TeamDTO>(), emptyList<TestDTO>())
 
-    fun toDAO(): Project {
+    fun toEntity(): Project {
         return Project(projectId ?: 0,
                 name,
                 description,
                 localPath ?: "",
                 remotePath ?: "",
-                teams.map(TeamDTO::toDAO).toMutableSet(),
+                teams.map(TeamDTO::toEntity).toMutableSet(),
                 mutableSetOf())
     }
 }
