@@ -2,11 +2,12 @@ package com.catcher.base.security
 
 import com.catcher.base.FunctionalTest
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.springframework.http.*
 import org.springframework.web.util.UriComponentsBuilder
 
-
+@Ignore
 class AuthenticationTest : FunctionalTest() {
 
     /**

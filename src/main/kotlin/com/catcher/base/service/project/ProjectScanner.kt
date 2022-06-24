@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.*
 import java.util.stream.Stream
 
 @Component
@@ -88,9 +89,9 @@ class ProjectScanner(
     private fun indexPath(files: Stream<Path>, tests: MutableSet<Path>) {
         files.forEach {
             val file = it.toFile()
-            if (file.isFile && (file.extension.toLowerCase() == "yaml"
-                        || file.extension.toLowerCase() == "yml"
-                        || file.extension.toLowerCase() == "json")
+            if (file.isFile && (file.extension.lowercase(Locale.getDefault()) == "yaml"
+                        || file.extension.lowercase(Locale.getDefault()) == "yml"
+                        || file.extension.lowercase(Locale.getDefault()) == "json")
             ) {
                 tests.add(it)
             } else if (file.isDirectory) {

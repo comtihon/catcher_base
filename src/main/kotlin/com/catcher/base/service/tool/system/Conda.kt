@@ -10,7 +10,7 @@ class Conda : SystemTool() {
 
     @Value("\${catcher.system.conda_name:}")
     private val env: String? = null
-    @Value("\${catcher.system.conda_python:3.7}")
+    @Value("\${catcher.system.conda_python:3.9}")
     private val python: String? = null
 
     override fun install() {

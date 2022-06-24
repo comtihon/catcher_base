@@ -42,6 +42,7 @@ abstract class FunctionalTest {
         "src",
         "test",
         "resources",
+        "data",
         this.javaClass.name
     )
 
@@ -107,8 +108,7 @@ abstract class FunctionalTest {
         request.set("password", password)
         request.set("grant_type", "password")
 
-        return template.withBasicAuth(clientId, secret)
-            .postForObject(
+        return template.postForObject(
                 UriComponentsBuilder.fromPath("/oauth/token").build().toUri(),
                 request, Map::class.java
             )

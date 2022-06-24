@@ -66,9 +66,7 @@ dependencies {
 //	implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation group: 'org.springframework.security.oauth.boot', name: 'spring-security-oauth2-autoconfigure', version: '2.6.8'
-    implementation 'org.springframework.security:spring-security-jwt'
-    implementation group: 'org.springframework.security', name: 'spring-security-data', version: '5.7.1'
+
 
     implementation group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '6.1.0.202203080745-r'
 
@@ -82,7 +80,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.testcontainers:postgresql:1.17.1'
+    testImplementation 'org.testcontainers:postgresql:1.17.2'
     testImplementation 'com.h2database:h2:2.1.212'
 }
 
@@ -143,3 +141,5 @@ task installAngular(type: Exec) {
         commandLine "npm", "install"
     }
 }
+
+tasks.withType(Copy).all { duplicatesStrategy 'exclude' }

@@ -8,9 +8,11 @@ import com.catcher.base.data.repository.TeamRepository
 import com.catcher.base.service.project.ProjectService
 import com.catcher.base.service.team.TeamService
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 
+@Ignore
 class UserResourceTest : FunctionalTest() {
 
     @Autowired

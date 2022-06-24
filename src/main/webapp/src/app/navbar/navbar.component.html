@@ -1,0 +1,130 @@
+<nav class="navbar default-layout col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+  <div class="text-center navbar-brand-wrapper d-flex align-items-top justify-content-center">
+    <a class="navbar-brand brand-logo" href="index.html">
+      <img src="assets/images/logo.svg" alt="logo"/>
+    </a>
+  </div>
+  <div class="navbar-menu-wrapper d-flex align-items-center">
+    <ul class="navbar-nav navbar-nav-left header-links d-none d-md-flex">
+      <li class="nav-item">
+        <a href="#" class="nav-link" routerLink="/">Home</a>
+      </li>
+      <li class="nav-item active">
+        <a href="#" class="nav-link" routerLink="/projects">Projects</a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link" routerLink="/steps">Steps</a>
+      </li>
+      <li class="nav-item">
+        <!-- TODO show only for admin users -->
+        <a href="#" class="nav-link">Settings</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav navbar-nav-right">
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" ngbDropdownToggle>
+          <i class="mdi mdi-file-document-box"></i>
+          <span *ngIf="notifications.events.length > 0" class="count">{{ notifications.events.length }}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" ngbDropdownMenu
+             aria-labelledby="messageDropdown">
+          <div class="dropdown-item">
+            <p class="mb-0 font-weight-normal float-left">You have {{ notifications.events.length }} notifications
+            </p>
+
+            <span *ngIf="notifications.events.length > 0"
+                  class="badge badge-info badge-pill float-right">View all</span>
+          </div>
+          <div *ngFor="let notification of notifications.events">
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <ng-container *ngIf="notification.type == notificationTypes.RUN_CANCELLED;else step">
+                  <img src="assets/images/navbar/media-stop.svg" alt="image" class="profile-pic">
+                </ng-container>
+                <ng-template #step>
+                  <ng-container *ngIf="notification.type == notificationTypes.STEP_MODIFIED;else test">
+                    <img src="assets/images/navbar/code.svg" alt="image" class="profile-pic">
+                  </ng-container>
+                </ng-template>
+                <ng-template #test>
+                  <ng-container *ngIf="notification.type == notificationTypes.TEST_MODIFIED;else unknown">
+                    <img src="assets/images/navbar/justify-left.svg" alt="image" class="profile-pic">
+                  </ng-container>
+                </ng-template>
+                <ng-template #unknown>
+                  <img src="assets/images/navbar/question-mark.svg" alt="image" class="profile-pic">
+                </ng-template>
+              </div>
+              <div class="preview-item-content flex-grow">
+                <h6 class="preview-subject ellipsis font-weight-medium">{{ notification.issuer_id }}
+                  <span class="float-right font-weight-light small-text">{{ notification.date_at }}</span>
+                </h6>
+                <p class="font-weight-light small-text">
+                  {{ notification.message }}
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link count-indicator dropdown-toggle" id="notificationDropdown" ngbDropdownToggle>
+          <i class="mdi mdi mdi-bell"></i>
+          <span *ngIf="notifications.alerts.length > 0" class="count">{{ notifications.alerts.length }}</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list" ngbDropdownMenu
+             aria-labelledby="notificationDropdown">
+          <a class="dropdown-item">
+            <p class="mb-0 font-weight-normal float-left">You have {{ notifications.alerts.length }} new notifications
+            </p>
+            <span *ngIf="notifications.alerts.length > 0"
+                  class="badge badge-pill badge-warning float-right">View all</span>
+          </a>
+          <div *ngFor="let alert of notifications.alerts">
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item preview-item">
+              <div class="preview-thumbnail">
+                <div *ngIf="!alert.result" class="preview-icon bg-warning">
+                  <i class="mdi mdi-tune-vertical mx-0"></i>
+                </div>
+                <div *ngIf="alert.result" class="preview-icon bg-success">
+                  <i class="mdi mdi-alert-circle-outline mx-0"></i>
+                </div>
+              </div>
+              <div class="preview-item-content">
+                <h6 class="preview-subject font-weight-medium">{{ alert.message }}</h6>
+                <p class="font-weight-light small-text">
+                  {{ alert.date_at }}
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item dropdown d-none d-xl-inline-block" ngbDropdown>
+        <a class="nav-link dropdown-toggle" id="UserDropdown" ngbDropdownToggle>
+          <span class="profile-text">Hello, {{ currentUser.name }}</span>
+          <img class="img-xs rounded-circle" src="assets/images/navbar/person.svg" alt="Profile image">
+        </a>
+        <div class="dropdown-menu dropdown-menu-right navbar-dropdown" ngbDropdownMenu aria-labelledby="UserDropdown">
+          <a class="dropdown-item mt-2">
+            <!-- TODO -->
+            Settings
+          </a>
+          <a class="dropdown-item">
+            <!-- TODO -->
+            Edit Profile
+          </a>
+          <a class="dropdown-item" (click)="logout()">
+            Sign Out
+          </a>
+        </div>
+      </li>
+    </ul>
+    <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+            (click)="toggleOffcanvas()">
+      <span class="mdi mdi-menu"></span>
+    </button>
+  </div>
+</nav>

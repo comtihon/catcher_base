@@ -5,6 +5,7 @@ import com.catcher.base.data.repository.TestRepository
 import com.catcher.base.service.project.ProjectScanner.Companion.TEST_DIR
 import org.junit.Assert
 import org.junit.Test
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import java.nio.file.Paths
 
@@ -24,6 +25,10 @@ internal class ScanOnRuntimeTest : ProjectTest() {
      */
     @Test
     fun testProjectsLoadedOnStartup() {
+        val log = LoggerFactory.getLogger(this::class.java)
+        log.info("--------------------->")
+        projectService.projectRepo.findAll().forEach { log.info(it.name) }
+
         newProject("project1", "one.yml", "two.yml", "three.yaml")
         newProject("project2", "testA.json", "testB.JSON")
 
@@ -57,6 +62,11 @@ internal class ScanOnRuntimeTest : ProjectTest() {
      */
     @Test
     fun testProjectsUpdatedOnStartup() {
+
+        val log = LoggerFactory.getLogger(this::class.java)
+        log.info("--------------------->")
+        projectService.projectRepo.findAll().forEach { log.info(it.name) }
+
         val project1Dir = newProject("project1", "one.yml")
         projectService.init()
 
