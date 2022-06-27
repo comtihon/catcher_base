@@ -99,7 +99,7 @@ compileTestKotlin {
 }
 
 test {
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    maxParallelForks = 1
 }
 
 task test_integration(type: Test) {

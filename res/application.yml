@@ -1,10 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:catcher}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true
+    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_NAME:catcher}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true
     username: ${DB_USER:test}
     password: ${DB_PASS:test}
   jpa: # disable stacktrace on system start from hibernate (checking supported features)
-    show-sql: true
     properties:
       hibernate:
         jdbc:
@@ -23,7 +22,8 @@ catcher:
     jwt:
       private: ${JWT_PRIV:catcher_priv}
   system:
-    venv_name: test
+    native_executable: python
+    pip_executable: pip
   executor:
     local:
       pool:
@@ -31,4 +31,4 @@ catcher:
         core_size: ${CORE_POOL_SIZE:1}
 server:
   port: ${SERVER_PORT:8080}
-  version: "test"
+  version: ${version}

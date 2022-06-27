@@ -18,6 +18,7 @@ class Venv : SystemTool() {
     }
 
     override fun execute(command: String): String {
-        return runCommand(arrayListOf("bash", "-c", "source $env/bin/activate; $command"))
+        val shell: String = System.getenv("SHELL") ?: "/bin/sh"
+        return runCommand(arrayListOf(shell, "-c", "source $env/bin/activate; $command"))
     }
 }

@@ -2,10 +2,14 @@ version: "3.2"
 
 services:
   postgres:
-    image: postgres
+    image: postgres:11.1
     environment:
       - POSTGRES_PASSWORD=test
       - POSTGRES_USER=test
       - POSTGRES_DB=catcher
     ports:
       - "5432:5432"
+  catcher_base:
+    build: .
+    ports:
+      - "8080:8080"

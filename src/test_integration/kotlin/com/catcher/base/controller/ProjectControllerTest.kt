@@ -7,12 +7,14 @@ import com.catcher.base.data.repository.TeamRepository
 import com.catcher.base.service.project.ProjectService
 import com.catcher.base.service.team.TeamService
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.jdbc.SqlGroup
 
+@Ignore
 class ProjectControllerTest : IntegrationTest() {
 
     @Autowired
@@ -135,21 +137,21 @@ class ProjectControllerTest : IntegrationTest() {
         var result = getWithToken("/api/v1/project", tokenA, List::class.java)
         Assert.assertEquals(HttpStatus.OK, result.statusCode)
         var projects = result.body
-        Assert.assertEquals(1, projects.size)
+        Assert.assertEquals(1, projects!!.size)
         Assert.assertEquals("test1", (projects[0] as Map<String, List<Map<String, *>>>)["name"])
 
         val tokenB = getToken("userB@test.de", "test")
         result = getWithToken("/api/v1/project", tokenB, List::class.java)
         Assert.assertEquals(HttpStatus.OK, result.statusCode)
         projects = result.body
-        Assert.assertEquals(1, projects.size)
+        Assert.assertEquals(1, projects!!.size)
         Assert.assertEquals("test2", (projects[0] as Map<String, List<Map<String, *>>>)["name"])
 
         val adminToken = getToken(adminEmail, adminPass)
         result = getWithToken("/api/v1/project", adminToken, List::class.java)
         Assert.assertEquals(HttpStatus.OK, result.statusCode)
         projects = result.body
-        Assert.assertEquals(2, projects.size)
+        Assert.assertEquals(2, projects!!.size)
         Assert.assertEquals("test1", (projects[0] as Map<String, List<Map<String, *>>>)["name"])
         Assert.assertEquals("test2", (projects[1] as Map<String, List<Map<String, *>>>)["name"])
     }
@@ -167,7 +169,7 @@ class ProjectControllerTest : IntegrationTest() {
         val result = getWithToken("/api/v1/project", token, List::class.java)
         Assert.assertEquals(HttpStatus.OK, result.statusCode)
         val projects = result.body
-        Assert.assertEquals(1, projects.size)
+        Assert.assertEquals(1, projects!!.size)
         val tests = (projects[0] as Map<String, List<Map<String, *>>>)["tests"]
         Assert.assertEquals(2, tests!!.size)
         Assert.assertEquals("test1_1", tests[0]["name"])
