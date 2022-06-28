@@ -32,7 +32,7 @@ K8s executor runs tests in spawned by demand k8s agents. To select it over the l
 you need to wait till I implement it :/
 
 ### Tools
-Python 3.5+ is needed for tests to run, as well as catcher itself. You can specify different python
+Python 3.7+ is needed for tests to run, as well as catcher itself. You can specify different python
 providers, such as `Conda`, `Venv` or python used in the `system`.  
 For `Conda` specify `catcher.system.conda_name`.  
 For `Venv` specify `catcher.system.venv_name`.  
@@ -40,3 +40,9 @@ For `system` specify both `catcher.system.native_executable` and `catcher.system
 Remember, that only one of them should be specified.  
 Catcher will be installed automatically on Base startup.  
 <TODO> switch to env vars!
+
+### Development
+If you run this project locally in the IDE:
+
+1. make sure you have the database available.
+2. if you are running `conda` locally and set up native_executable - add it's PATH to the IDE's run config.

@@ -10,7 +10,7 @@ abstract class SystemTool {
 
     open fun version(): String {
         return try {
-            execute("python --version")  // TODO check python3 as well and save executable
+            execute("python --version")
         } catch (e: ExecutionFailedException) {
             "not installed"
         }

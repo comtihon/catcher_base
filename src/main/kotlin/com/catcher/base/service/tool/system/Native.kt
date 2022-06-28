@@ -17,15 +17,10 @@ class Native : SystemTool() {
     @Value("\${catcher.system.pip_executable:}")
     private val pipExecutable: String? = null
 
-    override fun version(): String {
-        return "$executable".runCommand()
-    }
-
     override fun install() {
         throw NotSupportedException("Automatic installation is not supported")
     }
 
-    // TODO testme
     override fun execute(command: String): String {
         return command.replaceExecutable("python", executable!!)
                 .replaceExecutable("pip", pipExecutable!!)
@@ -40,7 +35,7 @@ class Native : SystemTool() {
      */
     private fun String.replaceExecutable(from: String, to: String): String {
         return when {
-            this.startsWith(from) -> "$to ${this.substring(this.indexOf(' '))}"
+            this.startsWith(from) -> "$to${this.substring(this.indexOf(' '))}"
             else -> this
         }
     }
