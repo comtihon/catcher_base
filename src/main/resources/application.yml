@@ -30,4 +30,3 @@ catcher:
         core_size: \${CORE_POOL_SIZE:1}
 server:
   port: \${SERVER_PORT:8080}
-  version: ${version}

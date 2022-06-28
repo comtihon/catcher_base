@@ -28,6 +28,10 @@ repositories {
     mavenCentral()
 }
 
+springBoot {
+    buildInfo()
+}
+
 def webappDir = "$projectDir/src/main/webapp"
 sourceSets {
     main {
