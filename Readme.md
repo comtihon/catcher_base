@@ -1,10 +1,24 @@
-# Catcher Base
+# Catcher Base [![test](https://github.com/comtihon/catcher_base/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/comtihon/catcher_base/actions/workflows/test.yml)
 
 Service for carrying end-to-end tests with [Catcher](https://github.com/comtihon/catcher).  
-Requires Postgres and Catcher to be installed locally.  
+Requires Postgres.
+
+## Run
+
+### Local
+To run it locally or via the IDE you must ensure you have python installed, as this is a requirement for the catcher-core.
+On the first run application will detect python and install catcher itself if it is not installed.
+It is recommended to use `venv` _(recommended)_ or `conda` instead of system python when running locally.
+
+If you are catcher_base via IDE with `conda` executor you and you set it up as __native_executable__ - you must add it's PATH to the IDE's run config.
+
+### Docker
+Application already dockerized. You can run it standalone or via docker-compose. It can be configured via env vars or by 
+mounting your application configuration to `/usr/app/config`.
 
 ## Configuration
-Service can be configured via environmental variables (although you can use java args).
+Service can be configured via environmental variables, java args or by placing your own `application.yml`/`application.properties` 
+to the default Spring's search path.
 
 ### Database
 __DB_HOST__ - database host. `Localhost` is default.  
@@ -40,9 +54,3 @@ For `system` specify both `catcher.system.native_executable` and `catcher.system
 Remember, that only one of them should be specified.  
 Catcher will be installed automatically on Base startup.  
 <TODO> switch to env vars!
-
-### Development
-If you run this project locally in the IDE:
-
-1. make sure you have the database available.
-2. if you are running `conda` locally and set up native_executable - add it's PATH to the IDE's run config.
